@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import SparklesIcon from '../components/shared/SparklesIcon';
 import ChevronRightIcon from '../components/shared/ChevronRightIcon';
 import ClockIcon from '../components/shared/ClockIcon';
+import BookOpenIcon from '../components/shared/BookOpenIcon';
 
 
 const HomePage: React.FC = () => {
@@ -23,6 +24,22 @@ const HomePage: React.FC = () => {
           {grades.map((grade) => (
             <GradeCard key={grade.id} grade={grade} />
           ))}
+
+          <Link
+            to="/eiken4"
+            className="block p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 bg-indigo-600 text-white transform hover:scale-105 active:scale-95"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="p-3 rounded-full bg-indigo-600 inline-block mb-3">
+                  <BookOpenIcon className="h-8 w-8 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold">英検4級</h2>
+                <p className="text-sm opacity-90">単語カード・並べ替え・結果カード</p>
+              </div>
+              <ChevronRightIcon className="h-8 w-8 opacity-70" />
+            </div>
+          </Link>
 
           <Link
             to="/random-challenge-options"
