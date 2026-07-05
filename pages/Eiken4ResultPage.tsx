@@ -24,35 +24,35 @@ const Eiken4ResultPage: React.FC = () => {
   const weakPoints = result.weakPoints.slice(0, 3);
 
   return (
-    <div className="flex-grow flex flex-col p-4 max-w-md mx-auto w-full">
-      <header className="mb-3 print:hidden">
+    <div className="flex-grow flex flex-col p-3 max-w-md mx-auto w-full">
+      <header className="mb-2 print:hidden">
         <Button onClick={() => navigate('/eiken4')} variant="ghost" size="sm">
           <ArrowLeftIcon className="h-5 w-5 mr-2" />
           英検4級に戻る
         </Button>
       </header>
 
-      <main className="flex-grow flex items-center">
-        <section className="w-full bg-white rounded-xl shadow-xl border border-indigo-100 p-5">
-          <div className="text-center border-b border-slate-200 pb-4 mb-4">
+      <main className="flex-grow flex items-start">
+        <section className="w-full bg-white rounded-xl shadow-xl border border-indigo-100 p-3">
+          <div className="text-center border-b border-slate-200 pb-2 mb-2">
             <p className="text-sm font-semibold text-indigo-600">英検4級</p>
-            <h1 className="text-2xl font-bold text-slate-800">今日の学習結果</h1>
+            <h1 className="text-xl font-bold text-slate-800">今日の結果</h1>
             <p className="text-sm text-slate-500 mt-1">{formatDate(result.startedAt)}</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 mb-4">
-            <div className="rounded-lg bg-indigo-50 p-3 text-center">
+          <div className="grid grid-cols-2 gap-2 mb-2">
+            <div className="rounded-lg bg-indigo-50 p-2 text-center">
               <p className="text-xs text-slate-500">学習時間</p>
-              <p className="text-2xl font-bold text-indigo-700">{result.durationMinutes || 0}分</p>
+              <p className="text-xl font-bold text-indigo-700">{result.durationMinutes || 0}分</p>
             </div>
-            <div className="rounded-lg bg-amber-50 p-3 text-center">
+            <div className="rounded-lg bg-amber-50 p-2 text-center">
               <p className="text-xs text-slate-500">正答率</p>
-              <p className="text-2xl font-bold text-amber-700">{accuracy}%</p>
+              <p className="text-xl font-bold text-amber-700">{accuracy}%</p>
             </div>
           </div>
 
-          <div className="space-y-2 text-slate-700 mb-4">
-            <div className="rounded-lg bg-slate-50 px-3 py-2">
+          <div className="space-y-1 text-sm text-slate-700 mb-2">
+            <div className="rounded-lg bg-slate-50 px-2.5 py-1.5">
               <div className="flex justify-between">
                 <span>単語カード</span>
                 <strong>{result.wordTotal ? `${result.wordTotal}語確認` : '未実施'}</strong>
@@ -64,20 +64,20 @@ const Eiken4ResultPage: React.FC = () => {
                 </div>
               )}
             </div>
-            <div className="flex justify-between rounded-lg bg-slate-50 px-3 py-2">
+            <div className="flex justify-between rounded-lg bg-slate-50 px-2.5 py-1.5">
               <span>確認テスト</span>
               <strong>{result.wordQuizTotal ? `${result.wordQuizTotal}問中${result.wordQuizCorrect}問正解` : '未実施'}</strong>
             </div>
-            <div className="flex justify-between rounded-lg bg-slate-50 px-3 py-2">
+            <div className="flex justify-between rounded-lg bg-slate-50 px-2.5 py-1.5">
               <span>並べ替え</span>
               <strong>{result.sentenceTotal ? `${result.sentenceTotal}問中${result.sentenceCorrect}問正解` : '未実施'}</strong>
             </div>
           </div>
 
-          <div className="rounded-lg border border-slate-200 p-3 mb-4">
-            <h2 className="text-sm font-bold text-slate-700 mb-2">復習ポイント</h2>
+          <div className="rounded-lg border border-slate-200 p-2 mb-2">
+            <h2 className="text-sm font-bold text-slate-700 mb-1">復習ポイント</h2>
             {weakPoints.length > 0 ? (
-              <ul className="space-y-1 text-sm text-slate-700">
+              <ul className="space-y-0.5 text-sm text-slate-700">
                 {weakPoints.map(point => (
                   <li key={point}>・{point}</li>
                 ))}
@@ -93,7 +93,7 @@ const Eiken4ResultPage: React.FC = () => {
         </section>
       </main>
 
-      <footer className="grid grid-cols-2 gap-3 mt-3 print:hidden">
+      <footer className="grid grid-cols-2 gap-2 mt-2 print:hidden">
         <Link to="/eiken4/words" className="text-center rounded-lg bg-slate-200 text-slate-800 font-semibold px-3 py-2">
           単語へ
         </Link>
