@@ -4,6 +4,8 @@ import Button from '../components/Button';
 import ArrowLeftIcon from '../components/shared/ArrowLeftIcon';
 import { eiken4Words } from '../data/eiken4Words';
 import { useEiken4Session } from '../contexts/Eiken4SessionContext';
+import SpeakerWaveIcon from '../components/shared/SpeakerWaveIcon';
+import { speakText } from '../services/speechService';
 
 const CARD_COUNT = 10;
 
@@ -116,12 +118,18 @@ const Eiken4WordCardsPage: React.FC = () => {
         <section className="bg-white rounded-xl shadow-xl border border-slate-100 p-6 text-center min-h-[320px] flex flex-col justify-center">
           <p className="text-sm text-indigo-600 font-semibold mb-3">{current.category}</p>
           <h2 className="text-5xl font-bold text-slate-800 mb-5">{current.word}</h2>
+          <button onClick={() => speakText(current.word, 'en-US', 0.82)} className="mx-auto mb-5 inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 font-bold px-4 py-2">
+            <SpeakerWaveIcon className="h-5 w-5 mr-2" />発音を聞く
+          </button>
           {showMeaning ? (
             <div>
               <p className="text-3xl font-bold text-indigo-700 mb-5">{current.meaning}</p>
               <div className="bg-slate-50 rounded-lg p-4 mb-6 text-left">
                 <p className="text-xs font-semibold text-slate-500 mb-1">例文</p>
                 <p className="text-lg text-slate-700">{current.example}</p>
+                <button onClick={() => speakText(current.example, 'en-US', 0.82)} className="mt-3 inline-flex items-center text-sm font-bold text-indigo-700">
+                  <SpeakerWaveIcon className="h-5 w-5 mr-1" />例文を聞く
+                </button>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <Button onClick={() => answer(true)} variant="primary" size="lg" className="w-full">できた</Button>
