@@ -1,5 +1,6 @@
 import { eiken4Readings } from '../data/eiken4Readings';
 import { localDateKey } from './eiken4DailyService';
+import { recordEiken4Activity } from './eiken4ProgressService';
 
 const KEY = 'eiken4DailyReadingV1';
 export type ReadingProgress = { date: string; readingId: string; answers: string[]; completedAt?: string };
@@ -23,4 +24,5 @@ export const loadReadingProgress = (): ReadingProgress => {
 
 export const saveReadingProgress = (progress: ReadingProgress) => {
   if (typeof localStorage !== 'undefined') localStorage.setItem(KEY, JSON.stringify(progress));
+  if (progress.completedAt) recordEiken4Activity('reading', progress.date);
 };
