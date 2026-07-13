@@ -1,14 +1,18 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import ArrowLeftIcon from '../components/shared/ArrowLeftIcon';
 import CheckCircleIcon from '../components/shared/CheckCircleIcon';
+import SpeakerWaveIcon from '../components/shared/SpeakerWaveIcon';
 import { getQuestionById, loadDailyProgress, recordReviewAnswer, saveDailyProgress } from '../services/eiken4DailyService';
+import { speakText } from '../services/speechService';
 
 const Eiken4DailyPage: React.FC = () => {
   const navigate = useNavigate();
   const [progress, setProgress] = useState(loadDailyProgress);
   const [selected, setSelected] = useState<string | null>(null);
+  const [playCount, setPlayCount] = useState(0);
+  const [slow, setSlow] = useState(false);
   const baseDone = progress.answers.length >= progress.questionIds.length;
   const retryDone = progress.retryAnswers.length >= progress.retryIds.length;
   const complete = baseDone && retryDone;
@@ -18,6 +22,19 @@ const Eiken4DailyPage: React.FC = () => {
   const total = progress.questionIds.length + progress.retryIds.length;
   const finished = progress.answers.length + progress.retryAnswers.length;
   const correctCount = progress.answers.filter(answer => answer.correct).length;
+  const isListening = Boolean(current?.audioText);
+
+  useEffect(() => {
+    setPlayCount(0);
+    setSlow(false);
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  }, [currentId]);
+
+  const playListening = () => {
+    if (!current?.audioText || playCount >= 2) return;
+    speakText(current.audioText.replace(/(?:Girl|Boy|Mother|Ken): /g, ''), 'en-US', slow ? 0.72 : 0.9);
+    setPlayCount(count => count + 1);
+  };
 
   const next = () => {
     if (!selected || !current) return;
@@ -66,8 +83,16 @@ const Eiken4DailyPage: React.FC = () => {
       </div>
       {isRetry && <div className="mb-4 rounded-xl bg-amber-100 text-amber-900 p-3 text-sm font-bold">あと少し！ 間違えた問題をもう一度やろう。</div>}
       <section className="rounded-2xl bg-white shadow-lg border border-indigo-100 p-6">
-        <p className="text-sm text-indigo-600 font-bold">いちばん合う答えを選ぼう</p>
-        <h1 className="text-2xl font-bold text-slate-800 mt-3">{current.prompt}</h1>
+        <p className="text-sm text-indigo-600 font-bold">{isListening ? '会話を聞いて答えよう' : 'いちばん合う答えを選ぼう'}</p>
+        {isListening && <div className="mt-4 rounded-xl bg-indigo-50 p-4">
+          <button onClick={playListening} disabled={playCount >= 2} className="w-full flex items-center justify-center rounded-xl bg-indigo-600 disabled:bg-slate-400 text-white font-bold py-4">
+            <SpeakerWaveIcon className="h-7 w-7 mr-2" />音声を聞く（あと{2 - playCount}回）
+          </button>
+          <label className="mt-3 flex items-center justify-center gap-2 text-sm font-semibold text-slate-700">
+            <input type="checkbox" checked={slow} onChange={event => setSlow(event.target.checked)} disabled={playCount >= 2} />ゆっくり速度
+          </label>
+        </div>}
+        <h1 className="text-2xl font-bold text-slate-800 mt-4">{current.prompt}</h1>
         <p className="text-sm text-slate-500 mt-2">{current.detail}</p>
         <div className="grid gap-3 mt-6">
           {current.choices.map(choice => {
@@ -78,7 +103,8 @@ const Eiken4DailyPage: React.FC = () => {
         </div>
         {selected && <div className={`mt-5 p-4 rounded-xl ${answeredCorrectly ? 'bg-emerald-50' : 'bg-amber-50'}`}>
           <p className="font-bold">{answeredCorrectly ? '正解！' : `正解：${current.answer}`}</p>
-          {current.explanation && <p className="text-sm text-slate-700 mt-1">{current.explanation}</p>}
+          {current.transcript && <div className="mt-3 border-t border-slate-200 pt-3"><p className="text-xs font-bold text-slate-500">聞こえた英文</p><p className="text-sm whitespace-pre-line mt-1">{current.transcript}</p><p className="text-xs font-bold text-slate-500 mt-3">日本語</p><p className="text-sm whitespace-pre-line mt-1">{current.translation}</p></div>}
+          {current.explanation && <p className="text-sm text-slate-700 mt-2">{current.explanation}</p>}
           <Button onClick={next} className="mt-4 w-full">次の問題へ</Button>
         </div>}
       </section>
