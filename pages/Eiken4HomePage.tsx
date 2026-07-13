@@ -7,13 +7,14 @@ import ChevronRightIcon from '../components/shared/ChevronRightIcon';
 import SparklesIcon from '../components/shared/SparklesIcon';
 import ClockIcon from '../components/shared/ClockIcon';
 import { useEiken4Session } from '../contexts/Eiken4SessionContext';
-import { loadDailyProgress } from '../services/eiken4DailyService';
+import { getDueReviewCount, loadDailyProgress } from '../services/eiken4DailyService';
 
 const Eiken4HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { resetSession } = useEiken4Session();
   const dailyProgress = loadDailyProgress();
   const dailyDone = Boolean(dailyProgress.completedAt);
+  const dueReviewCount = getDueReviewCount();
 
   const startFresh = (path: string) => {
     resetSession();
@@ -43,7 +44,7 @@ const Eiken4HomePage: React.FC = () => {
             <div>
               <p className="text-sm font-bold opacity-90">毎日これだけ</p>
               <h2 className="text-2xl font-bold mt-1">{dailyDone ? '今日の15分 完了！' : dailyProgress.answers.length ? '今日の続きをする' : '今日の15分を始める'}</h2>
-              <p className="text-sm opacity-90 mt-1">単語10問＋文法・会話5問</p>
+              <p className="text-sm opacity-90 mt-1">単語・文法15問{dueReviewCount > 0 ? `（復習${dueReviewCount}問あり）` : ''}</p>
             </div>
             <div className="text-right">
               <span className="text-3xl font-bold">{dailyProgress.answers.length}</span>
