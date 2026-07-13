@@ -8,6 +8,7 @@ import SparklesIcon from '../components/shared/SparklesIcon';
 import ClockIcon from '../components/shared/ClockIcon';
 import { useEiken4Session } from '../contexts/Eiken4SessionContext';
 import { getDueReviewCount, loadDailyProgress } from '../services/eiken4DailyService';
+import { loadReadingProgress } from '../services/eiken4ReadingService';
 
 const Eiken4HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const Eiken4HomePage: React.FC = () => {
   const dailyProgress = loadDailyProgress();
   const dailyDone = Boolean(dailyProgress.completedAt);
   const dueReviewCount = getDueReviewCount();
+  const readingProgress = loadReadingProgress();
 
   const startFresh = (path: string) => {
     resetSession();
@@ -52,6 +54,10 @@ const Eiken4HomePage: React.FC = () => {
               <ChevronRightIcon className="h-7 w-7 ml-auto mt-1 opacity-80" />
             </div>
           </div>
+        </button>
+
+        <button onClick={() => navigate('/eiken4/reading')} className="w-full p-5 rounded-xl shadow-lg bg-sky-600 text-white text-left hover:shadow-xl active:scale-95 transition-all">
+          <div className="flex items-center justify-between"><div className="flex items-center"><BookOpenIcon className="h-9 w-9 mr-4"/><div><h2 className="text-xl font-bold">1日1題 ミニ長文</h2><p className="text-sm opacity-90">{readingProgress.completedAt ? '今日の長文は完了！' : readingProgress.answers.length ? '今日の続きをしよう' : '短い英文＋2問'}</p></div></div><ChevronRightIcon className="h-7 w-7 opacity-80"/></div>
         </button>
 
         <button
