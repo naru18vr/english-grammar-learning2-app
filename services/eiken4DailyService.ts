@@ -1,6 +1,7 @@
 import { eiken4Sentences } from '../data/eiken4Sentences';
 import { eiken4Words } from '../data/eiken4Words';
 import { eiken4ListeningQuestions } from '../data/eiken4Listening';
+import { recordEiken4Activity } from './eiken4ProgressService';
 
 export const EIKEN4_DAILY_KEY = 'eiken4DailyProgressV2';
 const REVIEW_KEY = 'eiken4ReviewScheduleV1';
@@ -122,6 +123,10 @@ const saveReviews = (records: ReviewRecord[]) => {
 };
 
 export const getDueReviewCount = () => loadReviews().filter(record => record.dueDate <= localDateKey()).length;
+export const getReviewCategoryCounts = () => loadReviews().reduce((counts, record) => {
+  const category = record.id.startsWith('word-') ? '単語' : record.id.startsWith('listening-') ? 'リスニング' : '文法・会話';
+  counts[category] = (counts[category] || 0) + 1; return counts;
+}, {} as Record<string, number>);
 
 export const recordReviewAnswer = (id: string, correct: boolean, isRetry: boolean) => {
   const records = loadReviews();
@@ -183,4 +188,5 @@ export const loadDailyProgress = (): DailyProgress => {
 
 export const saveDailyProgress = (progress: DailyProgress) => {
   if (typeof localStorage !== 'undefined') localStorage.setItem(EIKEN4_DAILY_KEY, JSON.stringify(progress));
+  if (progress.completedAt) recordEiken4Activity('daily', progress.date);
 };
