@@ -82,7 +82,8 @@ const Eiken4DailyPage: React.FC = () => {
           <h1 className="text-3xl font-bold text-slate-800 mt-2">{correctCount} / {progress.questionIds.length} 問正解</h1>
           <p className="text-slate-600 mt-3">間違えた問題も今日のうちに復習しました。</p>
           <p className="text-sm text-indigo-700 font-semibold mt-2">次は翌日・3日後・7日後・14日後に自動で出題します。</p>
-          <Button onClick={() => navigate('/eiken4')} className="mt-7 w-full">英検4級ホームへ</Button>
+          <Button onClick={() => navigate('/eiken4/reading')} className="mt-7 w-full">続けて今日のミニ長文へ</Button>
+          <Button onClick={() => navigate('/eiken4')} variant="ghost" className="mt-2 w-full">英検4級ホームへ</Button>
         </div>
       </div>
     );
