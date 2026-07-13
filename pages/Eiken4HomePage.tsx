@@ -38,6 +38,9 @@ const Eiken4HomePage: React.FC = () => {
       </header>
 
       <main className="grid grid-cols-1 gap-4 max-w-xl mx-auto">
+        <button onClick={() => navigate('/eiken4/progress')} className="w-full p-5 rounded-xl shadow-lg bg-teal-600 text-white text-left hover:shadow-xl active:scale-95 transition-all">
+          <div className="flex items-center justify-between"><div className="flex items-center"><ClockIcon className="h-9 w-9 mr-4"/><div><p className="text-xs font-bold opacity-80">試験までの日数・苦手</p><h2 className="text-xl font-bold">学習ダッシュボード</h2></div></div><ChevronRightIcon className="h-7 w-7 opacity-80"/></div>
+        </button>
         <button
           onClick={() => navigate('/eiken4/daily')}
           className="w-full p-6 rounded-xl shadow-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-left hover:shadow-2xl active:scale-95 transition-all"
