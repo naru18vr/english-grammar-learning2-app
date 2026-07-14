@@ -4,7 +4,7 @@ import Button from '../components/Button';
 import ArrowLeftIcon from '../components/shared/ArrowLeftIcon';
 import SentenceConstructionArea from '../components/SentenceConstructionArea';
 import WordBank from '../components/WordBank';
-import { eiken4Sentences } from '../data/eiken4Sentences';
+import { eiken4CoreSentences } from '../data/eiken4Curriculum';
 import { Sentence } from '../types';
 import { useEiken4Session } from '../contexts/Eiken4SessionContext';
 import { useAppContext } from '../contexts/AppContext';
@@ -30,7 +30,7 @@ const Eiken4SentencesPage: React.FC = () => {
   const { completeSentences } = useEiken4Session();
   const { isSoundEnabled } = useAppContext();
   const questions = useMemo(() => {
-    const shuffled = shuffleArray(eiken4Sentences);
+    const shuffled = shuffleArray(eiken4CoreSentences);
     return shuffled.sort((a, b) => {
       const left = getSentenceLearningRecord('eiken4', 'sentences', a.id);
       const right = getSentenceLearningRecord('eiken4', 'sentences', b.id);

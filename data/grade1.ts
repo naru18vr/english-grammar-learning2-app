@@ -1,4 +1,5 @@
 import { Grade } from '../types';
+import { expandUnitToFifty } from './expandUnitSentences';
 
 export const GRADE_1_UNIT_1_SENTENCES: Grade['units'][0]['sentences'] = [
   // Existing 30 sentences
@@ -599,44 +600,44 @@ const tags = (sentences: Grade['units'][0]['sentences'], patterns: RegExp[]) =>
 export const GRADE_1_UNITS: Grade['units'] = [
   {
     id: 'u1', title: 'Unit 1: Hello, Everyone!',
-    sentences: GRADE_1_UNIT_1_SENTENCES.filter(sentence => !/can|cannot|Can you/.test(sentence.grammarTag)),
+    sentences: expandUnitToFifty(GRADE_1_UNIT_1_SENTENCES.filter(sentence => !/can|cannot|Can you/.test(sentence.grammarTag)), 'g1u1'),
   },
   {
     id: 'u2', title: 'Unit 2: Our New Teacher',
-    sentences: [
+    sentences: expandUnitToFifty([
       ...tags(GRADE_1_UNIT_2_SENTENCES, [/^(He|She) is/, /^Is (he|she)/, /^(This|That) is/, /^Is (this|that)/]),
       ...tags(GRADE_1_UNIT_1_SENTENCES, [/can/i]),
-    ],
+    ], 'g1u2'),
   },
   {
     id: 'u3', title: 'Unit 3: Our School',
-    sentences: [
+    sentences: expandUnitToFifty([
       ...tags(GRADE_1_UNIT_2_SENTENCES, [/^What/, /^Who/, /^How/]),
       ...tags(GRADE_1_UNIT_3_SENTENCES, [/^Where ~\? の文$/, /^When ~\? の文$/]),
-    ],
+    ], 'g1u3'),
   },
   {
     id: 'u4', title: 'Unit 4: Friends in New Zealand',
-    sentences: [
+    sentences: expandUnitToFifty([
       ...tags(GRADE_1_UNIT_3_SENTENCES, [/^How many ~\? の文$/, /^How many ~\? の文 \(be動詞\)$/]),
       ...tags(GRADE_1_UNIT_4_SENTENCES, [/命令文/, /^What \+ 名詞/]),
-    ],
+    ], 'g1u4'),
   },
   {
     id: 'u5', title: 'Unit 5: My Brother in Hawaii',
-    sentences: tags(GRADE_1_UNIT_6_SENTENCES, [/^主語が三人称単数/]),
+    sentences: expandUnitToFifty(tags(GRADE_1_UNIT_6_SENTENCES, [/^主語が三人称単数/]), 'g1u5'),
   },
   {
     id: 'u6', title: 'Unit 6: A Rakugo Performer from the U.K.',
-    sentences: tags(GRADE_1_UNIT_7_SENTENCES, [/目的格/, /^Whose/, /^Which/]),
+    sentences: expandUnitToFifty(tags(GRADE_1_UNIT_7_SENTENCES, [/目的格/, /^Whose/, /^Which/]), 'g1u6'),
   },
   {
     id: 'u7', title: 'Unit 7: An Online Tour of the U.K.',
-    sentences: GRADE_1_UNIT_8_SENTENCES,
+    sentences: expandUnitToFifty(GRADE_1_UNIT_8_SENTENCES.filter(sentence => !sentence.grammarTag.includes('感嘆文')), 'g1u7'),
   },
   {
     id: 'u8', title: 'Unit 8: Think Globally, Act Locally',
-    sentences: GRADE_1_UNIT_9_SENTENCES.filter(sentence => !/過去形/.test(sentence.grammarTag)),
+    sentences: expandUnitToFifty(GRADE_1_UNIT_9_SENTENCES.filter(sentence => !/過去形|sound|look like/.test(sentence.grammarTag)), 'g1u8'),
   },
   {
     id: 'u9', title: 'Unit 9: Winter Vacation',

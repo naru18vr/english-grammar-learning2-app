@@ -1,4 +1,3 @@
-import { eiken4Sentences } from '../data/eiken4Sentences';
 import { eiken4Words } from '../data/eiken4Words';
 import { eiken4ListeningQuestions } from '../data/eiken4Listening';
 import { eiken4CoreExamQuestions, eiken4CoreSentences } from '../data/eiken4Curriculum';
@@ -83,7 +82,7 @@ const wordQuestion = (wordId: string, date: string): DailyQuestion | undefined =
 };
 
 const sentenceQuestion = (sentenceId: string, date: string): DailyQuestion | undefined => {
-  const sentence = eiken4Sentences.find(item => `sentence-${item.id}` === sentenceId);
+  const sentence = eiken4CoreSentences.find(item => `sentence-${item.id}` === sentenceId);
   if (!sentence) return undefined;
   const answer = sentence.words.join(' ').replace(/ ([.,?!])/g, '$1');
   return {
@@ -91,7 +90,7 @@ const sentenceQuestion = (sentenceId: string, date: string): DailyQuestion | und
     prompt: sentence.japaneseQuestion,
     detail: sentence.grammarTag,
     answer,
-    choices: choicesFor(answer, eiken4Sentences.filter(item => item.id !== sentence.id).map(item => item.words.join(' ').replace(/ ([.,?!])/g, '$1')), `${date}-${sentence.id}`),
+    choices: choicesFor(answer, eiken4CoreSentences.filter(item => item.id !== sentence.id).map(item => item.words.join(' ').replace(/ ([.,?!])/g, '$1')), `${date}-${sentence.id}`),
     explanation: sentence.explanation,
     kind: '文法・会話',
   };

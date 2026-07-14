@@ -80,7 +80,7 @@ export const eiken4Words: Eiken4Word[] = [
   { id:'w070', word:'send', meaning:'送る', example:'I will send you an email.', category:'不規則動詞', priority:'A' },
   { id:'w071', word:'sent', meaning:'送った', example:'She sent me a postcard.', category:'不規則動詞', priority:'A' },
   { id:'w072', word:'build', meaning:'建てる', example:'They will build a new bridge.', category:'不規則動詞', priority:'B' },
-  { id:'w073', word:'built', meaning:'建てた、建てられた', example:'This house was built in 1990.', category:'不規則動詞', priority:'B' },
+  { id:'w073', word:'built', meaning:'建てた', example:'My grandfather built this house.', category:'不規則動詞', priority:'B' },
   { id:'w074', word:'find', meaning:'見つける', example:'I cannot find my key.', category:'不規則動詞', priority:'A' },
   { id:'w075', word:'found', meaning:'見つけた', example:'We found a small cat.', category:'不規則動詞', priority:'A' },
   { id:'w076', word:'hear', meaning:'聞こえる、聞く', example:'I can hear music outside.', category:'不規則動詞', priority:'A' },

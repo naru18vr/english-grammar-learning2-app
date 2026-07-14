@@ -56,10 +56,19 @@ const GRADE_3_UNIT_0_PASSIVE_REVIEW: Grade['units'][0]['sentences'] = [
 ];
 
 // Unit 0 は中2までの総復習。各Unitから均等に取り、受け身だけに偏らせない。
-export const GRADE_3_UNIT_0_SENTENCES: Grade['units'][0]['sentences'] = [
-  ...GRADE_2_UNITS.slice(1).flatMap(unit => unit.sentences.slice(0, 6)),
-  ...GRADE_3_UNIT_0_PASSIVE_REVIEW.slice(0, 8),
-];
+export const GRADE_3_UNIT_0_SENTENCES: Grade['units'][0]['sentences'] = (() => {
+  const candidates = [
+    ...GRADE_2_UNITS.slice(1).flatMap(unit => unit.sentences.slice(0, 7)),
+    ...GRADE_3_UNIT_0_PASSIVE_REVIEW,
+  ];
+  const seen = new Set<string>();
+  return candidates.filter(item => {
+    const key = `${item.japaneseQuestion}|${item.words.join(' ')}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, 50).map((item, index) => ({ ...item, id: `g3u0s${index + 1}`, words: [...item.words] }));
+})();
 
 const GRADE_3_UNIT_1_BASE_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g3u1s1", japaneseQuestion: "私は3年間、ここに住んでいます。", words: ["I", "have", "lived", "here", "for", "three", "years", "."], grammarTag: "現在完了形「継続」", explanation: "過去から現在までの継続を表します。forは期間を示します。" },
@@ -221,7 +230,7 @@ const GRADE_3_UNIT_3_BASE_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g3u3s43", japaneseQuestion: "母は私に毎日野菜を食べさせます。", words: ["My", "mother", "makes", "me", "eat", "vegetables", "every", "day", "."], grammarTag: "原形不定詞 (make)", explanation: "習慣的な強制を表します。" },
   { id: "g3u3s44", japaneseQuestion: "彼にそれを試させてみましょう。", words: ["Let's", "let", "him", "try", "it", "."], grammarTag: "原形不定詞 (let)", explanation: "Let's ...（〜しましょう）と let ...（〜させる）を組み合わせています。" },
   { id: "g3u3s45", japaneseQuestion: "私は彼がその仕事を終えるのを手伝いました。", words: ["I", "helped", "him", "to", "finish", "the", "work", "."], grammarTag: "help + 人 + to 〜", explanation: "toをつけた形です。" },
-  { id: "g3u3s46", japaneseQuestion: "約束を破るなんて、彼は不誠実です。", words: ["It", "is", "dishonest", "of", "him", "to", "break", "a", "promise", "."], grammarTag: "It is ... of (人) to 〜", explanation: "彼の不誠実な性格について述べています。" },
+  { id: "g3u3s46", japaneseQuestion: "私たちを手伝ってくれるなんて、彼は親切です。", words: ["It", "is", "kind", "of", "him", "to", "help", "us", "."], grammarTag: "It is ... of (人) to 〜", explanation: "人の性質を表す形容詞kindにはofを使います。" },
   { id: "g3u3s47", japaneseQuestion: "彼女は私たちに静かにするように言いました。", words: ["She", "told", "us", "to", "be", "quiet", "."], grammarTag: "tell + 人 + to 〜", explanation: "状態を表すbe動詞と共に使われます。" },
   { id: "g3u3s48", japaneseQuestion: "私は誰かが私の名前を呼ぶのを聞きました。", words: ["I", "heard", "someone", "call", "my", "name", "."], grammarTag: "原形不定詞 (hear)", explanation: "知覚動詞の文です。" },
   { id: "g3u3s49", japaneseQuestion: "父は私にコンピューターを使わせてくれません。", words: ["My", "father", "won't", "let", "me", "use", "the", "computer", "."], grammarTag: "原形不定詞 (let)", explanation: "否定文で「〜させてくれない」という不許可を表します。" },
@@ -372,7 +381,7 @@ export const GRADE_3_UNIT_6_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g3u6s9", japaneseQuestion: "もし彼がもっと一生懸命勉強すれば、試験に合格するだろうに。", words: ["If", "he", "studied", "harder", ",", "he", "would", "pass", "the", "exam", "."], grammarTag: "仮定法過去", explanation: "現在の事実に反する仮定です。" },
   { id: "g3u6s10", japaneseQuestion: "明日雨が降らなければなあ。", words: ["I", "wish", "it", "would", "not", "rain", "tomorrow", "."], grammarTag: "仮定法 (I wish)", explanation: "未来に対する願望は I wish S would ... を使います。" },
   { id: "g3u6s11", japaneseQuestion: "もし私が彼の立場だったら、同じことをするでしょう。", words: ["If", "I", "were", "in", "his", "place", ",", "I", "would", "do", "the", "same", "thing", "."], grammarTag: "仮定法過去", explanation: "in his placeで「彼の立場で」という意味です。" },
-  { id: "g3u6s12", japaneseQuestion: "もし宝くじに当たったら、家を買うのに。", words: ["If", "I", "won", "the", "lottery", ",", "I", "would", "buy", "a", "house", "."], grammarTag: "仮定法過去", explanation: "現在の事実に反する仮定です。" },
+  { id: "g3u6s12", japaneseQuestion: "もしもっとお金があれば、その自転車を買うのに。", words: ["If", "I", "had", "more", "money", ",", "I", "would", "buy", "that", "bike", "."], grammarTag: "仮定法過去", explanation: "現在の事実に反する仮定です。" },
   { id: "g3u6s13", japaneseQuestion: "彼が真実を知っていればなあ。", words: ["I", "wish", "he", "knew", "the", "truth", "."], grammarTag: "仮定法 (I wish)", explanation: "現在の事実に反する願望です。" },
   { id: "g3u6s14", japaneseQuestion: "もし私が彼女の住所を知っていれば、彼女を訪ねるのに。", words: ["If", "I", "knew", "her", "address", ",", "I", "would", "visit", "her", "."], grammarTag: "仮定法過去", explanation: "現在の事実に反する仮定です。" },
   { id: "g3u6s15", japaneseQuestion: "もし私がもっと若ければ、世界中を旅するのに。", words: ["If", "I", "were", "younger", ",", "I", "would", "travel", "around", "the", "world", "."], grammarTag: "仮定法過去", explanation: "現在の事実に反する仮定です。" },
@@ -394,7 +403,7 @@ export const GRADE_3_UNIT_6_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g3u6s31", japaneseQuestion: "私があなたと同じくらい賢ければなあ。", words: ["I", "wish", "I", "were", "as", "smart", "as", "you", "."], grammarTag: "仮定法 (I wish)", explanation: "現在の事実に反する願望です。" },
   { id: "g3u6s32", japaneseQuestion: "もし私が暇なら、その本を読むのに。", words: ["If", "I", "had", "time", ",", "I", "would", "read", "the", "book", "."], grammarTag: "仮定法過去", explanation: "現在の事実に反する仮定です。" },
   { id: "g3u6s33", japaneseQuestion: "もし今日が私の誕生日なら、パーティーを開くのに。", words: ["If", "it", "were", "my", "birthday", "today", ",", "I", "would", "have", "a", "party", "."], grammarTag: "仮定法過去", explanation: "現在の事実に反する仮定です。" },
-  { id: "g3u6s34", japaneseQuestion: "彼がそんなに頑固でなければなあ。", words: ["I", "wish", "he", "were", "not", "so", "stubborn", "."], grammarTag: "仮定法 (I wish)", explanation: "現在の事実に反する願望の否定形です。" },
+  { id: "g3u6s34", japaneseQuestion: "彼がそんなに忙しくなければなあ。", words: ["I", "wish", "he", "were", "not", "so", "busy", "."], grammarTag: "仮定法 (I wish)", explanation: "現在の事実に反する願望の否定形です。" },
   { id: "g3u6s35", japaneseQuestion: "もっと自由な時間があれば、もっと本を読むのに。", words: ["If", "I", "had", "more", "free", "time", ",", "I", "would", "read", "more", "books", "."], grammarTag: "仮定法過去", explanation: "If節は過去形、主節はwould + 動詞の原形を使います。" },
   { id: "g3u6s36", japaneseQuestion: "もし彼女がここにいれば、その質問に答えられるのに。", words: ["If", "she", "were", "here", ",", "she", "could", "answer", "the", "question", "."], grammarTag: "仮定法過去", explanation: "現在の事実とは異なる仮定と可能性を表します。" },
   { id: "g3u6s37", japaneseQuestion: "ギターが弾けたらなあ。", words: ["I", "wish", "I", "could", "play", "the", "guitar", "."], grammarTag: "仮定法 (I wish)", explanation: "I wish + 主語 + couldで、現在できないことへの願望を表します。" },

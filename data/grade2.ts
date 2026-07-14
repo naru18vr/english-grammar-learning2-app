@@ -174,7 +174,7 @@ export const GRADE_2_UNIT_2_SENTENCES = expandUnitToFifty(GRADE_2_UNIT_2_BASE_SE
     && !sentence.grammarTag.includes('過去完了'),
 ), 'g2u2');
 
-export const GRADE_2_UNIT_3_SENTENCES: Grade['units'][0]['sentences'] = [
+const GRADE_2_UNIT_3_BASE_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g2u3s1", japaneseQuestion: "私は本を借りるために図書館へ行きました。", words: ["I", "went", "to", "the", "library", "to", "borrow", "some", "books", "."], grammarTag: "to + 動詞の原形「〜するために」", explanation: "to borrow ... が、図書館へ行った目的を表します。" },
   { id: "g2u3s2", japaneseQuestion: "私はその知らせを聞いてうれしいです。", words: ["I", "am", "happy", "to", "hear", "the", "news", "."], grammarTag: "to + 動詞の原形「～して」", explanation: "感情の原因を表す不定詞の副詞的用法です。" },
   { id: "g2u3s3", japaneseQuestion: "私には今日やるべき宿題がたくさんあります。", words: ["I", "have", "a", "lot", "of", "homework", "to", "do", "today", "."], grammarTag: "to + 動詞の原形「〜するべき，〜するための」", explanation: "名詞を修飾する不定詞の形容詞的用法です。" },
@@ -226,6 +226,11 @@ export const GRADE_2_UNIT_3_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g2u3s49", japaneseQuestion: "彼がそのように言うのは親切です。", words: ["It", "is", "kind", "of", "him", "to", "say", "so", "."], grammarTag: "It is ... of (人) to 〜.", explanation: "人の性質を表す形容詞の場合、for の代わりに of を使います。" },
   { id: "g2u3s50", japaneseQuestion: "私はその映画を見に行きたいです。", words: ["I", "would", "like", "to", "go", "to", "see", "the", "movie", "."], grammarTag: "would like to ～.", explanation: "want to よりも丁寧な願望の表現です。" },
 ];
+
+export const GRADE_2_UNIT_3_SENTENCES = expandUnitToFifty(
+  GRADE_2_UNIT_3_BASE_SENTENCES.filter(sentence => !sentence.grammarTag.includes('for (人)') && !sentence.grammarTag.includes('of (人)')),
+  'g2u3',
+);
 
 export const GRADE_2_UNIT_4_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g2u4s1", japaneseQuestion: "私は早く起きなければなりません。", words: ["I", "have", "to", "get", "up", "early", "."], grammarTag: "I have to 〜. の文", explanation: "「〜しなければならない」という義務を表します。" },

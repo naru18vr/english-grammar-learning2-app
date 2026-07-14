@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { Grade, Unit, Sentence } from '../types';
-import { GRADES_DATA } from '../constants';
+import { GRADE_SUMMARIES } from '../data/gradeSummaries';
 
 interface AppContextType {
   grades: Grade[];
@@ -14,8 +14,8 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [grades] = useState<Grade[]>(GRADES_DATA);
+export const AppProvider: React.FC<{ children: ReactNode; grades?: Grade[] }> = ({ children, grades: suppliedGrades = GRADE_SUMMARIES }) => {
+  const grades = suppliedGrades;
   const [isSoundEnabled, setIsSoundEnabled] = useState<boolean>(() => {
     if (typeof localStorage === 'undefined') return true;
     const saved = localStorage.getItem('soundEnabled');

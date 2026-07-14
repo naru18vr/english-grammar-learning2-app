@@ -276,7 +276,7 @@ const BuilderPage: React.FC = () => {
 
           <div className="mt-auto pt-6 text-center">
             <Button 
-              onClick={handleCheckAnswer} 
+              onClick={handleCheckAnswer}
               disabled={sentenceBuilderState.builtWords.length === 0 || sentenceBuilderState.showResultModal || isLoadingSentences}
               variant="primary"
               size="lg"

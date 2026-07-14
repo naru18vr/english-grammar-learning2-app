@@ -6,19 +6,22 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "check:content": "node scripts/check-content.mjs",
+    "check:content": "node scripts/check-content.mjs && esbuild scripts/check-runtime-content.ts --bundle --platform=node --format=esm --outfile=/tmp/eigo-check-runtime.mjs && node /tmp/eigo-check-runtime.mjs",
     "check": "npm run check:content && tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "react-dom": "^19.1.0",
-    "react": "^19.1.0",
-    "react-router-dom": "^7.6.2",
+    "@google/genai": "^1.11.0",
     "jspdf": "2.5.1",
-    "@google/genai": "^1.11.0"
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.2"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
   }
