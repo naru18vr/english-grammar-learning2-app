@@ -59,7 +59,10 @@ export const parseWorksheetShareData = (encoded: string | null): SharedWorksheet
     if (data.questionIds.length < 1 || data.questionIds.length > 20) return null;
     if (data.questionIds.some(id => typeof id !== 'string' || !getQuestionById(id, data.date))) return null;
     const reading = data.reading?.completedAt && eiken4Readings.some(item => item.id === data.reading?.readingId) ? data.reading : undefined;
-    const grade1 = data.grade1?.wordIndexes?.length === 3 && data.grade1?.grammarIndexes?.length === 3 ? data.grade1 : undefined;
+    const grade1Valid = data.grade1?.wordIndexes?.length === 3 && data.grade1?.grammarIndexes?.length === 3
+      && data.grade1.wordIndexes.every(index => Number.isInteger(index) && index >= 0 && index < 72)
+      && data.grade1.grammarIndexes.every(index => Number.isInteger(index) && index >= 0 && index < 16);
+    const grade1 = grade1Valid ? data.grade1 : undefined;
     return { progress: { date: data.date, questionIds: data.questionIds, answers: data.answers, retryIds: [], retryAnswers: [], completedAt: data.date }, reading, grade1 };
   } catch {
     return null;
