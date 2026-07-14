@@ -17,6 +17,8 @@ const Grade1DailyReviewPage: React.FC = () => {
   const [shown, setShown] = useState(false);
   const [picked, setPicked] = useState<number[]>([]);
   const [checked, setChecked] = useState(false);
+  const [attempts, setAttempts] = useState(0);
+  const [retrying, setRetrying] = useState(false);
   const items = getGrade1DailyItems(progress.date);
   const all: ReviewItem[] = [
     ...items.words.map(({ item }) => ({ type: '単語', prompt: item.word, answer: item.meaning, note: item.example })),
@@ -41,6 +43,8 @@ const Grade1DailyReviewPage: React.FC = () => {
     setShown(false);
     setPicked([]);
     setChecked(false);
+    setAttempts(0);
+    setRetrying(false);
   };
 
   if (!current) return <div className="flex-grow container mx-auto p-4 max-w-xl"><div className="mt-12 rounded-2xl bg-white shadow-xl p-7 text-center"><p className="text-emerald-700 font-bold">中1おさらい完了！</p><h1 className="text-3xl font-bold mt-2">今日の10問が終わりました</h1><p className="text-slate-600 mt-3">英検4級でよく使う単語5語と文法並べ替え5問を確認しました。</p><Button onClick={() => navigate('/eiken4/daily')} className="w-full mt-6">次は「今日の15分」へ</Button><Button onClick={() => navigate('/eiken4/course')} variant="ghost" className="w-full mt-2">コース一覧を見る</Button></div></div>;
@@ -59,7 +63,7 @@ const Grade1DailyReviewPage: React.FC = () => {
           {picked.length ? picked.map(key => { const token = tokens.find(item => item.key === key); return <button key={key} disabled={checked} onClick={() => !checked && setPicked(value => value.filter(item => item !== key))} className="rounded-lg bg-indigo-600 text-white px-3 py-2 font-bold shadow">{token?.word}</button>; }) : <p className="text-sm text-amber-700">下の単語を正しい順にタップ</p>}
         </div>
         <div className="mt-4 flex flex-wrap gap-2 justify-center">{tokens.filter(token => !picked.includes(token.key)).map(token => <button key={token.key} disabled={checked} onClick={() => setPicked(value => [...value, token.key])} className="rounded-lg border-2 border-indigo-200 bg-white px-3 py-2 font-bold text-slate-700">{token.word}</button>)}</div>
-        {!checked ? <Button onClick={() => setChecked(true)} disabled={picked.length !== tokens.length} className="w-full mt-6">答え合わせ</Button> : <div className={`mt-5 rounded-xl p-4 text-left ${grammarCorrect ? 'bg-emerald-50' : 'bg-rose-50'}`}><p className={`font-bold ${grammarCorrect ? 'text-emerald-700' : 'text-rose-700'}`}>{grammarCorrect ? '正解！' : `正解：${current.answer}`}</p><p className="text-sm text-slate-600 mt-2">{current.note}</p><Button onClick={() => finishItem(grammarCorrect)} className="w-full mt-4">次の問題</Button></div>}
+        {!checked && !retrying ? <Button onClick={() => { const nextAttempts = attempts + 1; setAttempts(nextAttempts); if (grammarCorrect || nextAttempts >= 3) setChecked(true); else setRetrying(true); if (isSoundEnabled) (grammarCorrect ? playCorrectSound : playIncorrectSound)(); }} disabled={picked.length !== tokens.length} className="w-full mt-6">答え合わせ</Button> : retrying ? <div className="mt-5 rounded-xl bg-amber-50 p-4 text-left"><p className="font-bold text-amber-800">不正解。正解はまだ見せません（{attempts}/3回）</p><Button onClick={() => { setPicked([]); setRetrying(false); }} variant="secondary" className="w-full mt-3">もう一度並べる</Button></div> : <div className={`mt-5 rounded-xl p-4 text-left ${grammarCorrect ? 'bg-emerald-50' : 'bg-rose-50'}`}><p className={`font-bold ${grammarCorrect ? 'text-emerald-700' : 'text-rose-700'}`}>{grammarCorrect ? '正解！' : `3回間違えました。正解：${current.answer}`}</p><p className="text-sm text-slate-600 mt-2">{current.note}</p><Button onClick={() => finishItem(grammarCorrect)} className="w-full mt-4">次の問題</Button></div>}
       </div>}
     </section>
   </div>;
