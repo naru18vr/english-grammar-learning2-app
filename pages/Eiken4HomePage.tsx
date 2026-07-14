@@ -40,6 +40,7 @@ const Eiken4HomePage: React.FC = () => {
       </header>
 
       <main className="grid grid-cols-1 gap-4 max-w-xl mx-auto">
+        <button onClick={() => navigate('/eiken4/course')} className="w-full p-6 rounded-2xl shadow-xl bg-gradient-to-r from-amber-400 to-orange-500 text-white text-left hover:shadow-2xl active:scale-95 transition-all"><div className="flex items-center justify-between"><div><p className="text-sm font-bold opacity-90">毎日はここから</p><h2 className="text-2xl font-bold mt-1">今日の学習コース</h2><p className="text-sm mt-2">中1復習 → 15分 → 長文 → 英単語 → 紙</p></div><ChevronRightIcon className="h-9 w-9"/></div></button>
         <Link to="/guide" className="block rounded-xl border-2 border-indigo-200 bg-indigo-50 p-4 text-indigo-800 shadow hover:shadow-md transition-all"><div className="flex items-center justify-between"><div><h2 className="font-bold text-lg">使い方を見る</h2><p className="text-sm">毎日のおすすめ順・できること</p></div><ChevronRightIcon className="h-6 w-6"/></div></Link>
         <button onClick={() => navigate('/eiken4/progress')} className="w-full p-5 rounded-xl shadow-lg bg-teal-600 text-white text-left hover:shadow-xl active:scale-95 transition-all">
           <div className="flex items-center justify-between"><div className="flex items-center"><ClockIcon className="h-9 w-9 mr-4"/><div><p className="text-xs font-bold opacity-80">試験までの日数・苦手</p><h2 className="text-xl font-bold">学習ダッシュボード</h2></div></div><ChevronRightIcon className="h-7 w-7 opacity-80"/></div>
