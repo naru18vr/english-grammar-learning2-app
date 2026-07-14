@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 34845)
-Total output lines: 649
-
 import { Grade } from '../types';
 
 export const GRADE_1_UNIT_1_SENTENCES: Grade['units'][0]['sentences'] = [
