@@ -43,12 +43,12 @@ const Grade1DailyReviewPage: React.FC = () => {
     setChecked(false);
   };
 
-  if (!current) return <div className="flex-grow container mx-auto p-4 max-w-xl"><div className="mt-12 rounded-2xl bg-white shadow-xl p-7 text-center"><p className="text-emerald-700 font-bold">中1おさらい完了！</p><h1 className="text-3xl font-bold mt-2">今日の10問が終わりました</h1><p className="text-slate-600 mt-3">基本単語5語と、異なる5つのUnitから並べ替えを確認しました。</p><Button onClick={() => navigate('/eiken4/daily')} className="w-full mt-6">次は「今日の15分」へ</Button><Button onClick={() => navigate('/eiken4/course')} variant="ghost" className="w-full mt-2">コース一覧を見る</Button></div></div>;
+  if (!current) return <div className="flex-grow container mx-auto p-4 max-w-xl"><div className="mt-12 rounded-2xl bg-white shadow-xl p-7 text-center"><p className="text-emerald-700 font-bold">中1おさらい完了！</p><h1 className="text-3xl font-bold mt-2">今日の10問が終わりました</h1><p className="text-slate-600 mt-3">英検4級でよく使う単語5語と文法並べ替え5問を確認しました。</p><Button onClick={() => navigate('/eiken4/daily')} className="w-full mt-6">次は「今日の15分」へ</Button><Button onClick={() => navigate('/eiken4/course')} variant="ghost" className="w-full mt-2">コース一覧を見る</Button></div></div>;
 
   const isWord = current.type === '単語';
   return <div className="flex-grow container mx-auto p-4 max-w-xl">
     <Button onClick={() => navigate('/eiken4')} variant="ghost" size="sm"><ArrowLeftIcon className="h-5 w-5 mr-2"/>英検4級に戻る</Button>
-    <header className="mt-4 rounded-xl bg-amber-500 text-white p-5 shadow"><p className="font-bold">毎日8分・英検4級につながる中1基礎</p><h1 className="text-2xl font-bold mt-1">単語5語＋並べ替え5問</h1><p className="text-sm mt-2 opacity-95">毎日5つのUnitを循環・未定着問題を優先</p></header>
+    <header className="mt-4 rounded-xl bg-amber-500 text-white p-5 shadow"><p className="font-bold">毎日8分・英検4級につながる中1基礎</p><h1 className="text-2xl font-bold mt-1">単語5語＋並べ替え5問</h1><p className="text-sm mt-2 opacity-95">英検4級頻出だけからランダム出題・未定着を優先</p></header>
     <div className="mt-4 flex justify-between text-sm font-bold text-slate-600"><span>{isWord ? '基本単語' : `文法並べ替え・${current.type}`}</span><span>{index + 1} / 10</span></div>
     <section className="mt-2 rounded-2xl bg-white shadow-lg p-6 text-center">
       <h2 className={`${isWord ? 'text-4xl' : 'text-xl'} font-bold text-slate-800 mt-2`}>{current.prompt}</h2>
