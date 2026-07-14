@@ -4,7 +4,7 @@ import { eiken4ListeningQuestions } from '../data/eiken4Listening';
 import { eiken4CoreExamQuestions, eiken4CoreSentences } from '../data/eiken4Curriculum';
 import { recordEiken4Activity } from './eiken4ProgressService';
 
-export const EIKEN4_DAILY_KEY = 'eiken4DailyProgressV3';
+export const EIKEN4_DAILY_KEY = 'eiken4DailyProgressV4';
 const REVIEW_KEY = 'eiken4ReviewScheduleV1';
 const REVIEW_INTERVALS = [1, 3, 7, 14];
 
@@ -164,14 +164,14 @@ export const recordReviewAnswer = (id: string, correct: boolean, isRetry: boolea
 
 const buildDailyQuestionIds = (date: string) => {
   const dueIds = loadReviews().filter(record => record.dueDate <= date).slice(0, 5).map(record => record.id);
-  const wordIds = seededItems(eiken4Words, `${date}-words`, 5).map(word => `word-${word.id}`);
+  const wordIds = seededItems(eiken4Words, `${date}-words`, 8).map(word => `word-${word.id}`);
   const sentenceIds = seededItems(eiken4CoreSentences, `${date}-sentences`, 4).map(sentence => `sentence-${sentence.id}`);
   const listeningIds = seededItems(eiken4ListeningQuestions, `${date}-listening`, 3).map(item => `listening-${item.id}`);
   const examIds = seededItems(eiken4CoreExamQuestions, `${date}-exam`, 3).map(item => `exam-${item.id}`);
   const category = (prefix: string, fresh: string[], count: number) =>
     Array.from(new Set([...dueIds.filter(id => id.startsWith(prefix)), ...fresh])).slice(0, count);
   return [
-    ...category('word-', wordIds, 5),
+    ...category('word-', wordIds, 8),
     ...category('sentence-', sentenceIds, 4),
     ...category('listening-', listeningIds, 3),
     ...category('exam-', examIds, 3),
@@ -191,6 +191,11 @@ export const loadDailyProgress = (): DailyProgress => {
   try {
     const saved = JSON.parse(localStorage.getItem(EIKEN4_DAILY_KEY) || 'null') as DailyProgress | null;
     if (saved?.date === localDateKey()) return saved;
+    const v3 = JSON.parse(localStorage.getItem('eiken4DailyProgressV3') || 'null') as DailyProgress | null;
+    if (v3?.date === localDateKey()) {
+      const migrated = v3.answers.length ? v3 : { ...v3, questionIds: buildDailyQuestionIds(v3.date) };
+      saveDailyProgress(migrated); return migrated;
+    }
     const previous = JSON.parse(localStorage.getItem('eiken4DailyProgressV2') || 'null') as DailyProgress | null;
     if (previous?.date === localDateKey()) {
       const migrated = previous.answers.length ? previous : { ...previous, questionIds: buildDailyQuestionIds(previous.date) };
