@@ -54,7 +54,7 @@ const Eiken4HomePage: React.FC = () => {
             </div>
             <div className="text-right">
               <span className="text-3xl font-bold">{dailyProgress.answers.length}</span>
-              <span className="text-sm"> / 15</span>
+              <span className="text-sm"> / {dailyProgress.questionIds.length}</span>
               <ChevronRightIcon className="h-7 w-7 ml-auto mt-1 opacity-80" />
             </div>
           </div>
