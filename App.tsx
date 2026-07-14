@@ -23,6 +23,7 @@ import GuidePage from './pages/GuidePage';
 import Eiken4WorksheetPage from './pages/Eiken4WorksheetPage';
 import Eiken4WordMapPage from './pages/Eiken4WordMapPage';
 import Grade1DailyReviewPage from './pages/Grade1DailyReviewPage';
+import Eiken4DailyCoursePage from './pages/Eiken4DailyCoursePage';
 
 const App: React.FC = () => {
   return (
@@ -51,6 +52,7 @@ const App: React.FC = () => {
             <Route path="/eiken4/worksheet" element={<Eiken4WorksheetPage />} />
             <Route path="/eiken4/word-map" element={<Eiken4WordMapPage />} />
             <Route path="/eiken4/grade1-review" element={<Grade1DailyReviewPage />} />
+            <Route path="/eiken4/course" element={<Eiken4DailyCoursePage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
