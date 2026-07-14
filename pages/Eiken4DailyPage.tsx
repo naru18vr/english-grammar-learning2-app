@@ -4,7 +4,7 @@ import Button from '../components/Button';
 import ArrowLeftIcon from '../components/shared/ArrowLeftIcon';
 import CheckCircleIcon from '../components/shared/CheckCircleIcon';
 import SpeakerWaveIcon from '../components/shared/SpeakerWaveIcon';
-import { getQuestionById, loadDailyProgress, recordReviewAnswer, saveDailyProgress } from '../services/eiken4DailyService';
+import { getQuestionById, loadDailyProgress, recordQuestionCoverage, recordReviewAnswer, saveDailyProgress } from '../services/eiken4DailyService';
 import { isSpeechSupported, speakText } from '../services/speechService';
 import { useAppContext } from '../contexts/AppContext';
 import { playCorrectSound, playIncorrectSound } from '../services/soundService';
@@ -69,6 +69,7 @@ const Eiken4DailyPage: React.FC = () => {
     const correct = selected === current.answer;
     if (current.id.startsWith('word-')) recordWordMastery(current.id, correct);
     recordReviewAnswer(current.id, correct, isRetry);
+    if (!isRetry) recordQuestionCoverage(current.id);
     const nextProgress = { ...progress };
     if (isRetry) {
       nextProgress.retryAnswers = [...progress.retryAnswers, { id: current.id, correct }];
