@@ -9,7 +9,7 @@ import SpeakerWaveIcon from '../components/shared/SpeakerWaveIcon';
 import ChartBarIcon from '../components/shared/ChartBarIcon';
 
 const dailySteps = [
-  { number: '1', title: '「今日の15分」をする', text: '単語・文法・リスニングを15問。間違えた問題は最後にもう一度出ます。', color: 'bg-emerald-500' },
+  { number: '1', title: '「今日の15分」をする', text: '単語8問を含む全18問。間違えた問題は最後にもう一度出ます。', color: 'bg-emerald-500' },
   { number: '2', title: '「1日1題 ミニ長文」を読む', text: '短い英文を1つ読んで2問に答えます。終わったら和訳と答えの根拠を確認します。', color: 'bg-sky-500' },
   { number: '3', title: '時間があれば本番形式をする', text: '空所補充・会話・語句整序を10問。英検らしい問題に慣れます。', color: 'bg-rose-500' },
   { number: '週1', title: '10分ミニ模試に挑戦', text: '週末などに1回。途中では答えを見ず、単語・文法・聞き取り・長文をまとめて解きます。', color: 'bg-violet-600' },
