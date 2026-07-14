@@ -6,9 +6,12 @@ import BookOpenIcon from '../components/shared/BookOpenIcon';
 import SpeakerWaveIcon from '../components/shared/SpeakerWaveIcon';
 import { speakText } from '../services/speechService';
 import { getTodayReading, loadReadingProgress, saveReadingProgress } from '../services/eiken4ReadingService';
+import { useAppContext } from '../contexts/AppContext';
+import { playCorrectSound, playIncorrectSound } from '../services/soundService';
 
 const Eiken4ReadingPage: React.FC = () => {
   const navigate = useNavigate();
+  const { isSoundEnabled } = useAppContext();
   const reading = getTodayReading();
   const [progress, setProgress] = useState(loadReadingProgress);
   const [selected, setSelected] = useState('');
@@ -18,6 +21,7 @@ const Eiken4ReadingPage: React.FC = () => {
 
   const answer = () => {
     if (!selected) return;
+    if (isSoundEnabled) (selected === question.answer ? playCorrectSound : playIncorrectSound)();
     const answers = [...progress.answers, selected];
     const next = { ...progress, answers, ...(answers.length === reading.questions.length ? { completedAt: new Date().toISOString() } : {}) };
     saveReadingProgress(next); setProgress(next); setSelected('');
