@@ -1,30 +1,32 @@
 
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import UnitSelectPage from './pages/UnitSelectPage';
-import BuilderPage from './pages/BuilderPage';
-import SetSelectPage from './pages/SetSelectPage';
-import ResultReportPage from './pages/ResultReportPage';
-import RandomChallengeOptionsPage from './pages/RandomChallengeOptionsPage';
-import ProgressPage from './pages/ProgressPage';
-import Eiken4HomePage from './pages/Eiken4HomePage';
-import Eiken4WordCardsPage from './pages/Eiken4WordCardsPage';
-import Eiken4WordQuizPage from './pages/Eiken4WordQuizPage';
-import Eiken4SentencesPage from './pages/Eiken4SentencesPage';
-import Eiken4ResultPage from './pages/Eiken4ResultPage';
-import Eiken4DailyPage from './pages/Eiken4DailyPage';
-import Eiken4ReadingPage from './pages/Eiken4ReadingPage';
-import Eiken4MockPage from './pages/Eiken4MockPage';
-import Eiken4ProgressPage from './pages/Eiken4ProgressPage';
 import { Eiken4SessionProvider } from './contexts/Eiken4SessionContext';
+import LoadingSpinner from './components/shared/LoadingSpinner';
+
+const HomePage = lazy(() => import('./pages/HomePage'));
+const UnitSelectPage = lazy(() => import('./pages/UnitSelectPage'));
+const BuilderPage = lazy(() => import('./pages/BuilderPage'));
+const SetSelectPage = lazy(() => import('./pages/SetSelectPage'));
+const ResultReportPage = lazy(() => import('./pages/ResultReportPage'));
+const RandomChallengeOptionsPage = lazy(() => import('./pages/RandomChallengeOptionsPage'));
+const ProgressPage = lazy(() => import('./pages/ProgressPage'));
+const Eiken4HomePage = lazy(() => import('./pages/Eiken4HomePage'));
+const Eiken4WordCardsPage = lazy(() => import('./pages/Eiken4WordCardsPage'));
+const Eiken4WordQuizPage = lazy(() => import('./pages/Eiken4WordQuizPage'));
+const Eiken4SentencesPage = lazy(() => import('./pages/Eiken4SentencesPage'));
+const Eiken4ResultPage = lazy(() => import('./pages/Eiken4ResultPage'));
+const Eiken4DailyPage = lazy(() => import('./pages/Eiken4DailyPage'));
+const Eiken4ReadingPage = lazy(() => import('./pages/Eiken4ReadingPage'));
+const Eiken4MockPage = lazy(() => import('./pages/Eiken4MockPage'));
+const Eiken4ProgressPage = lazy(() => import('./pages/Eiken4ProgressPage'));
 
 const App: React.FC = () => {
   return (
     <HashRouter>
       <Eiken4SessionProvider>
         <div className="min-h-screen flex flex-col">
-          <Routes>
+          <Suspense fallback={<div className="flex-grow flex items-center justify-center"><LoadingSpinner /></div>}><Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/random-challenge-options" element={<RandomChallengeOptionsPage />} />
             <Route path="/grade/:gradeId" element={<UnitSelectPage />} />
@@ -42,7 +44,7 @@ const App: React.FC = () => {
             <Route path="/eiken4/sentences" element={<Eiken4SentencesPage />} />
             <Route path="/eiken4/result" element={<Eiken4ResultPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          </Routes></Suspense>
         </div>
       </Eiken4SessionProvider>
     </HashRouter>
