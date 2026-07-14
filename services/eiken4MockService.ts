@@ -4,6 +4,7 @@ import { eiken4ListeningQuestions } from '../data/eiken4Listening';
 import { eiken4Readings } from '../data/eiken4Readings';
 import { DailyQuestion, getQuestionById } from './eiken4DailyService';
 import { recordEiken4Activity } from './eiken4ProgressService';
+import { eiken4ExamQuestions } from '../data/eiken4ExamQuestions';
 
 const RESULT_KEY = 'eiken4WeeklyMockResultV1';
 const HISTORY_KEY = 'eiken4MockHistoryV1';
@@ -31,10 +32,11 @@ export const getWeeklyMock = (): MockQuestion[] => {
   const week = weekKey();
   const ids = [
     ...pick(eiken4Words, `${week}-w`, 5).map(x => `word-${x.id}`),
-    ...pick(eiken4Sentences, `${week}-s`, 4).map(x => `sentence-${x.id}`),
+    ...pick(eiken4Sentences, `${week}-s`, 2).map(x => `sentence-${x.id}`),
     ...pick(eiken4ListeningQuestions, `${week}-l`, 2).map(x => `listening-${x.id}`),
   ];
   const basics = ids.map(id => getQuestionById(id, week)).filter((x): x is DailyQuestion => Boolean(x)).map(question => ({ ...question, section: question.kind }));
+  const examQuestions: MockQuestion[] = pick(eiken4ExamQuestions, `${week}-exam`, 4).map(item => ({ id:`exam-${item.id}`,prompt:item.prompt,detail:item.type,answer:item.answer,choices:pick(item.choices,`${week}-${item.id}`,item.choices.length),explanation:item.explanation,kind:item.type,section:item.type }));
   const reading = pick(eiken4Readings, `${week}-r`, 1)[0];
   const readingQuestions: MockQuestion[] = reading.questions.map((question, index) => ({
     id: `mock-${reading.id}-${index}`,
@@ -45,7 +47,7 @@ export const getWeeklyMock = (): MockQuestion[] => {
     explanation: question.explanation,
     kind: '長文', section: '長文', passage: reading.passage, translation: reading.translation, evidence: question.evidence,
   }));
-  return [...basics, ...readingQuestions];
+  return [...basics, ...examQuestions, ...readingQuestions];
 };
 
 export const loadMockResult = (): MockResult | null => {
