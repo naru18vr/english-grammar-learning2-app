@@ -8,7 +8,7 @@ import { getQuestionById, loadDailyProgress, recordReviewAnswer, saveDailyProgre
 import { isSpeechSupported, speakText } from '../services/speechService';
 import { useAppContext } from '../contexts/AppContext';
 import { playCorrectSound, playIncorrectSound } from '../services/soundService';
-import { downloadDailyWorksheet } from '../services/eiken4WorksheetService';
+import { createWorksheetShareLink, downloadDailyWorksheet } from '../services/eiken4WorksheetService';
 
 const Eiken4DailyPage: React.FC = () => {
   const navigate = useNavigate();
@@ -20,6 +20,7 @@ const Eiken4DailyPage: React.FC = () => {
   const [audioStatus, setAudioStatus] = useState<'idle' | 'loading' | 'playing' | 'error'>('idle');
   const [audioMessage, setAudioMessage] = useState('');
   const [pdfStatus, setPdfStatus] = useState<'idle' | 'making' | 'error'>('idle');
+  const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'error'>('idle');
   const baseDone = progress.answers.length >= progress.questionIds.length;
   const retryDone = progress.retryAnswers.length >= progress.retryIds.length;
   const complete = baseDone && retryDone;
@@ -88,6 +89,27 @@ const Eiken4DailyPage: React.FC = () => {
         setPdfStatus('error');
       }
     };
+    const copyParentMessage = async () => {
+      const score = progress.answers.filter(answer => answer.correct).length;
+      const message = `今日の15分を完了しました！\n正解：${score} / ${progress.questionIds.length}問\n今日の類題プリントはこちら\n${createWorksheetShareLink(progress)}`;
+      try {
+        if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(message);
+        else {
+          const area = document.createElement('textarea');
+          area.value = message;
+          area.style.position = 'fixed';
+          area.style.opacity = '0';
+          document.body.appendChild(area);
+          area.select();
+          const copied = document.execCommand('copy');
+          area.remove();
+          if (!copied) throw new Error('copy failed');
+        }
+        setCopyStatus('copied');
+      } catch {
+        setCopyStatus('error');
+      }
+    };
     return (
       <div className="flex-grow container mx-auto p-4 sm:p-6 max-w-xl">
         <div className="mt-12 rounded-2xl bg-white shadow-xl border border-emerald-100 p-7 text-center">
@@ -99,6 +121,11 @@ const Eiken4DailyPage: React.FC = () => {
           <div className="mt-6 rounded-xl bg-amber-50 border border-amber-200 p-4 text-left">
             <p className="font-bold text-amber-900">保護者の方へ</p>
             <p className="text-sm text-amber-900 mt-1">今日の内容に合った別問題15問と、解答・解説をA4 PDFで作ります。</p>
+            <Button onClick={copyParentMessage} className="mt-3 w-full">
+              {copyStatus === 'copied' ? 'コピーしました！' : '結果と印刷リンクをコピー'}
+            </Button>
+            <p className="text-xs text-amber-800 mt-2">Google Chatに貼り付けて、結果画面のスクショと一緒に送れます。</p>
+            {copyStatus === 'error' && <p className="text-sm text-rose-700 font-bold mt-2">コピーできませんでした。Chromeの権限をご確認ください。</p>}
             <Button onClick={downloadWorksheet} disabled={pdfStatus === 'making'} variant="secondary" className="mt-3 w-full">
               {pdfStatus === 'making' ? 'PDFを作成中…' : '今日の類題プリントPDF'}
             </Button>
