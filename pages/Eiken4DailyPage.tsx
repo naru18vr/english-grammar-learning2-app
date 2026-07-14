@@ -11,6 +11,7 @@ import { playCorrectSound, playIncorrectSound } from '../services/soundService';
 import { copyTextToClipboard, createWorksheetShareLink, downloadDailyWorksheet } from '../services/eiken4WorksheetService';
 import { loadReadingProgress } from '../services/eiken4ReadingService';
 import { recordWordMastery } from '../services/eiken4WordMasteryService';
+import Eiken4GrammarReference from '../components/Eiken4GrammarReference';
 
 const Eiken4DailyPage: React.FC = () => {
   const navigate = useNavigate();
@@ -194,6 +195,7 @@ const Eiken4DailyPage: React.FC = () => {
           <p className="font-bold">{answeredCorrectly ? '正解！' : `3回間違えました。正解：${current.answer}`}</p>
           {current.transcript && <div className="mt-3 border-t border-slate-200 pt-3"><p className="text-xs font-bold text-slate-500">聞こえた英文</p><p className="text-sm whitespace-pre-line mt-1">{current.transcript}</p><p className="text-xs font-bold text-slate-500 mt-3">日本語</p><p className="text-sm whitespace-pre-line mt-1">{current.translation}</p></div>}
           {current.explanation && <p className="text-sm text-slate-700 mt-2">{current.explanation}</p>}
+          {!answeredCorrectly && <Eiken4GrammarReference source={`${current.kind} ${current.prompt} ${current.detail} ${current.explanation || ''}`} />}
           {!isListening && <button onClick={() => speakText(current.id.startsWith('word-') ? current.prompt : current.answer, 'en-US', 0.82)} className="mt-3 inline-flex items-center rounded-full bg-white text-indigo-700 font-bold px-4 py-2 border border-indigo-200">
             <SpeakerWaveIcon className="h-5 w-5 mr-2" />{current.id.startsWith('word-') ? '単語の発音を聞く' : '正しい英文を聞く'}
           </button>}
