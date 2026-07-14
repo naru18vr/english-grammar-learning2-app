@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import ArrowLeftIcon from '../components/shared/ArrowLeftIcon';
 import { useAppContext } from '../contexts/AppContext';
-import { getDailyExamQuestions, loadExamPractice, saveExamPractice } from '../services/eiken4ExamService';
+import { getDailyExamQuestions, loadExamPractice, recordExamAnswer, saveExamPractice } from '../services/eiken4ExamService';
 import { playCorrectSound, playIncorrectSound } from '../services/soundService';
 
 const Eiken4ExamPracticePage: React.FC = () => {
@@ -29,6 +29,7 @@ const Eiken4ExamPracticePage: React.FC = () => {
   };
 
   const next = () => {
+    recordExamAnswer(current.id, correct);
     const answers = { ...progress.answers, [current.id]: selected };
     const nextProgress = { ...progress, answers, ...(Object.keys(answers).length === questions.length ? { completedAt: new Date().toISOString() } : {}) };
     saveExamPractice(nextProgress);
