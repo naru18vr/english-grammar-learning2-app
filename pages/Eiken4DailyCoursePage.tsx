@@ -7,19 +7,19 @@ import ChevronRightIcon from '../components/shared/ChevronRightIcon';
 import { loadGrade1Review } from '../services/grade1ReviewService';
 import { loadDailyProgress } from '../services/eiken4DailyService';
 import { loadReadingProgress } from '../services/eiken4ReadingService';
-import { areWordCardsDoneToday } from '../services/eiken4WordMasteryService';
+import { isWordQuizDoneToday } from '../services/eiken4WordMasteryService';
 
 const Eiken4DailyCoursePage: React.FC = () => {
   const navigate = useNavigate();
   const grade1Done = Boolean(loadGrade1Review().completedAt);
   const dailyDone = Boolean(loadDailyProgress().completedAt);
   const readingDone = Boolean(loadReadingProgress().completedAt);
-  const cardsDone = areWordCardsDoneToday();
+  const cardsDone = isWordQuizDoneToday();
   const steps = [
     { title: '中1のおさらい', detail: '単語3語＋文法3問・約5分', path: '/eiken4/grade1-review', done: grade1Done },
     { title: '今日の15分', detail: '単語・文法・リスニング・本番形式18問', path: '/eiken4/daily', done: dailyDone },
     { title: 'ミニ長文', detail: '英文1題＋設問2問', path: '/eiken4/reading', done: readingDone },
-    { title: '英単語カード', detail: '未学習・苦手な8語', path: '/eiken4/words', done: cardsDone },
+    { title: '英単語＋確認テスト', detail: 'カード8語を見て、同じ8語をテスト', path: '/eiken4/words', done: cardsDone },
     { title: '紙の類似プリント', detail: '印刷リンクをお母さんへ送る', path: '/eiken4/daily', done: false },
   ];
   const nextIndex = steps.findIndex(step => !step.done);
