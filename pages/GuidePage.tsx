@@ -11,7 +11,7 @@ import ChartBarIcon from '../components/shared/ChartBarIcon';
 const dailySteps = [
   { number: '1', title: '「今日の15分」をする', text: '単語8問を含む全18問。間違えた問題は最後にもう一度出ます。', color: 'bg-emerald-500' },
   { number: '2', title: '「1日1題 ミニ長文」を読む', text: '短い英文を1つ読んで2問に答えます。終わったら和訳と答えの根拠を確認します。', color: 'bg-sky-500' },
-  { number: '3', title: '「中1 単語・文法おさらい」をする', text: '基本単語5語と、毎日異なる5つのUnitから並べ替え5問を約8分で確認します。中1の全Unitを循環し、未定着問題を優先します。', color: 'bg-amber-500' },
+  { number: '3', title: '「中1 単語・文法おさらい」をする', text: '英検4級で出やすい中1単語5語と文法並べ替え5問を約8分で確認します。頻出候補から毎日ランダムに出し、未定着問題を優先します。', color: 'bg-amber-500' },
   { number: '4', title: '時間があれば本番形式をする', text: '空所補充・会話・語句整序を10問。英検らしい問題に慣れます。', color: 'bg-rose-500' },
   { number: '週1', title: '10分ミニ模試に挑戦', text: '週末などに1回。途中では答えを見ず、単語・文法・聞き取り・長文をまとめて解きます。', color: 'bg-violet-600' },
 ];
