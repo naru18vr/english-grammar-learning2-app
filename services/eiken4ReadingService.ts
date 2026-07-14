@@ -35,9 +35,11 @@ export const saveReadingProgress = (progress: ReadingProgress) => {
   if (progress.completedAt) {
     recordEiken4Activity('reading', progress.date);
     if (typeof localStorage !== 'undefined') {
-      const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]') as string[];
+      let history: string[] = [];
+      let markers: string[] = [];
+      try { history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch { /* repair invalid saved data */ }
       const marker = `${progress.date}:${progress.readingId}`;
-      const markers = JSON.parse(localStorage.getItem(`${HISTORY_KEY}-markers`) || '[]') as string[];
+      try { markers = JSON.parse(localStorage.getItem(`${HISTORY_KEY}-markers`) || '[]'); } catch { /* repair invalid saved data */ }
       if (!markers.includes(marker)) {
         localStorage.setItem(HISTORY_KEY, JSON.stringify([...history, progress.readingId].slice(-180)));
         localStorage.setItem(`${HISTORY_KEY}-markers`, JSON.stringify([...markers, marker].slice(-180)));
