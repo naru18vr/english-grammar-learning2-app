@@ -80,7 +80,7 @@ const Eiken4HomePage: React.FC = () => {
               <BookOpenIcon className="h-9 w-9 text-indigo-600 mr-4" />
               <div>
                 <h2 className="text-xl font-bold text-slate-800">単語カード</h2>
-                <p className="text-sm text-slate-500">10語をテンポよく確認</p>
+                <p className="text-sm text-slate-500">未学習・苦手な8語を確認</p>
               </div>
             </div>
             <ChevronRightIcon className="h-7 w-7 text-slate-400" />
