@@ -20,7 +20,7 @@ const Eiken4DailyCoursePage: React.FC = () => {
   const readingDone = Boolean(loadReadingProgress().completedAt);
   const cardsDone = isWordQuizDoneToday();
   const steps = [
-    { title: '中1のおさらい', detail: '単語5語＋5Unitの文法5問・約8分', path: '/eiken4/grade1-review', done: grade1Done },
+    { title: '中1のおさらい', detail: '英検4級頻出の単語5語＋文法5問・約8分', path: '/eiken4/grade1-review', done: grade1Done },
     { title: '今日の15分', detail: '単語・文法・リスニング・本番形式18問', path: '/eiken4/daily', done: dailyDone },
     { title: 'ミニ長文', detail: '英文1題＋設問2問', path: '/eiken4/reading', done: readingDone },
     { title: '英単語＋確認テスト', detail: 'カード8語を見て、同じ8語をテスト', path: '/eiken4/words', done: cardsDone },
