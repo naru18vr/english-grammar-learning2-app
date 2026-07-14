@@ -58,14 +58,21 @@ export const loadMockHistory = (): MockResult[] => {
   if (typeof localStorage === 'undefined') return [];
   try {
     const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]') as MockResult[];
-    if (history.length) return history;
-    const legacy = loadMockResult(); return legacy ? [legacy] : [];
+    const source = history.length ? history : (loadMockResult() ? [loadMockResult()!] : []);
+    const unique = source.filter((result, index, items) =>
+      items.findIndex(item => item.completedAt === result.completedAt) === index
+    );
+    if (unique.length !== history.length && history.length) {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(unique));
+    }
+    return unique;
   } catch { return []; }
 };
 export const saveMockResult = (result: MockResult) => {
-  if (typeof localStorage !== 'undefined') localStorage.setItem(RESULT_KEY, JSON.stringify(result));
   if (typeof localStorage !== 'undefined') {
-    const history = loadMockHistory(); history.push(result);
+    const history = loadMockHistory();
+    if (!history.some(item => item.completedAt === result.completedAt)) history.push(result);
+    localStorage.setItem(RESULT_KEY, JSON.stringify(result));
     localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(-20)));
     localStorage.removeItem(ATTEMPT_KEY);
   }
