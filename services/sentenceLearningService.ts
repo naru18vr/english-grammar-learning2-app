@@ -57,6 +57,7 @@ export const getSentenceDifficulty = (sentence: Sentence): Difficulty => {
 };
 
 export const getCurriculumLabels = (gradeId: string, unitId: string, sentence: Sentence): string[] => {
+  if (gradeId === 'eiken4') return ['英検4級重要', `文法：${sentence.grammarTag}`];
   const grade = gradeId.replace('grade', '中');
   const unit = unitId.replace('u', 'Unit ');
   const labels = [`NEW HORIZON ${grade} ${unit}`];
