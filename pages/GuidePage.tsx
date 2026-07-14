@@ -11,7 +11,7 @@ import ChartBarIcon from '../components/shared/ChartBarIcon';
 const dailySteps = [
   { number: '1', title: '「今日の15分」をする', text: '単語8問を含む全18問。間違えた問題は最後にもう一度出ます。', color: 'bg-emerald-500' },
   { number: '2', title: '「1日1題 ミニ長文」を読む', text: '短い英文を1つ読んで2問に答えます。終わったら和訳と答えの根拠を確認します。', color: 'bg-sky-500' },
-  { number: '3', title: '「中1 単語・文法おさらい」をする', text: '基本単語3語と、NEW HORIZON 2025の中1コースを使った並べ替え3問を約5分で確認します。間違えた内容は再び優先します。', color: 'bg-amber-500' },
+  { number: '3', title: '「中1 単語・文法おさらい」をする', text: '基本単語5語と、毎日異なる5つのUnitから並べ替え5問を約8分で確認します。中1の全Unitを循環し、未定着問題を優先します。', color: 'bg-amber-500' },
   { number: '4', title: '時間があれば本番形式をする', text: '空所補充・会話・語句整序を10問。英検らしい問題に慣れます。', color: 'bg-rose-500' },
   { number: '週1', title: '10分ミニ模試に挑戦', text: '週末などに1回。途中では答えを見ず、単語・文法・聞き取り・長文をまとめて解きます。', color: 'bg-violet-600' },
 ];
@@ -44,7 +44,7 @@ const GuidePage: React.FC = () => {
     </div></section>
 
     <section className="mt-8 rounded-xl bg-amber-50 border border-amber-200 p-5"><h2 className="font-bold text-amber-900 text-lg">続けるコツ</h2><ul className="mt-2 text-sm text-amber-900 leading-7 list-disc pl-5"><li>毎日全部できなくても、「今日の15分」だけはやる</li><li>分からなくても止まらず、答えと解説を読む</li><li>音が出ないときは端末の音量とChromeの音声設定を確認する</li><li>週に1回、学習ダッシュボードで苦手を確認する</li></ul></section>
-    <section className="mt-4 rounded-xl bg-indigo-50 border border-indigo-200 p-5"><h2 className="font-bold text-indigo-900 text-lg">7/20〜8/16の夏休みノルマ</h2><p className="text-sm text-indigo-900 mt-2 leading-7">24日学習＋4日予備。曜日に関係なく、学習日は「今日の15分（18問）→ミニ長文→単語カード8語→中1おさらい6問→類似プリント」。休んでも未学習問題は次回へ持ち越されます。予備日を使わなかった日は復習またはミニ模試にします。</p></section>
+    <section className="mt-4 rounded-xl bg-indigo-50 border border-indigo-200 p-5"><h2 className="font-bold text-indigo-900 text-lg">7/20〜8/16の夏休みノルマ</h2><p className="text-sm text-indigo-900 mt-2 leading-7">24日学習＋4日予備。曜日に関係なく、学習日は「中1おさらい10問→今日の15分（18問）→ミニ長文→単語カード8語→類似プリント」。休んでも未学習問題は次回へ持ち越されます。予備日を使わなかった日は復習またはミニ模試にします。</p></section>
     <Button onClick={() => navigate('/eiken4')} className="w-full mt-6">英検4級の学習を始める</Button>
   </div>;
 };
