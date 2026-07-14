@@ -40,6 +40,8 @@ const Eiken4WordQuizPage: React.FC = () => {
   const [choices, setChoices] = useState<string[]>(() => makeChoices(quizWords[0]));
   const [selected, setSelected] = useState('');
   const [checked, setChecked] = useState(false);
+  const [attempts, setAttempts] = useState(0);
+  const [retrying, setRetrying] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const [wrongWords, setWrongWords] = useState<string[]>([]);
@@ -49,10 +51,17 @@ const Eiken4WordQuizPage: React.FC = () => {
 
   const checkAnswer = () => {
     const correct = selected === current.meaning;
-    recordWordMastery(current.id, correct);
     if (isSoundEnabled) (correct ? playCorrectSound : playIncorrectSound)();
+    const nextAttempts = attempts + 1;
+    setAttempts(nextAttempts);
     setIsCorrect(correct);
-    setChecked(true);
+    if (correct || nextAttempts >= 3) {
+      recordWordMastery(current.id, correct);
+      setChecked(true);
+      setRetrying(false);
+    } else {
+      setRetrying(true);
+    }
   };
 
   const nextQuestion = () => {
@@ -73,6 +82,8 @@ const Eiken4WordQuizPage: React.FC = () => {
     setChoices(makeChoices(quizWords[nextIndex]));
     setSelected('');
     setChecked(false);
+    setAttempts(0);
+    setRetrying(false);
     setIsCorrect(false);
   };
 
@@ -105,12 +116,12 @@ const Eiken4WordQuizPage: React.FC = () => {
             {choices.map((choice, choiceIndex) => {
               const isSelected = selected === choice;
               const isAnswer = checked && choice === current.meaning;
-              const isWrongSelected = checked && isSelected && choice !== current.meaning;
+              const isWrongSelected = (checked || retrying) && isSelected && choice !== current.meaning;
               return (
                 <button
                   key={`${choice}-${choiceIndex}`}
-                  onClick={() => !checked && setSelected(choice)}
-                  disabled={checked}
+                  onClick={() => !checked && !retrying && setSelected(choice)}
+                  disabled={checked || retrying}
                   className={`w-full rounded-lg border px-4 py-3 text-left text-lg font-semibold transition-all ${
                     isAnswer
                       ? 'bg-green-50 border-green-400 text-green-800'
@@ -140,11 +151,13 @@ const Eiken4WordQuizPage: React.FC = () => {
             </div>
           )}
 
+          {retrying && <div className="rounded-lg bg-amber-50 p-4 mb-5"><p className="font-bold text-amber-800">不正解。答えはまだ見せません（{attempts}/3回）</p><Button onClick={() => { setSelected(''); setRetrying(false); }} variant="secondary" className="w-full mt-3">もう一度</Button></div>}
+
           {checked ? (
             <Button onClick={handleNext} variant="primary" size="lg" className="w-full">
               {isLast ? '結果を見る' : '次へ'}
             </Button>
-          ) : (
+          ) : !retrying && (
             <Button onClick={checkAnswer} disabled={!selected} variant="primary" size="lg" className="w-full">
               答える
             </Button>
