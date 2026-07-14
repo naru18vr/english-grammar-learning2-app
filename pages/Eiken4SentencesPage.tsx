@@ -9,6 +9,7 @@ import { Sentence } from '../types';
 import { useEiken4Session } from '../contexts/Eiken4SessionContext';
 import { useAppContext } from '../contexts/AppContext';
 import { playCorrectSound, playIncorrectSound } from '../services/soundService';
+import { classifyWeakness, formatReviewDate, getCurriculumLabels, getMasteryLevel, getSentenceDifficulty, getSentenceLearningRecord, recordSentenceLearning } from '../services/sentenceLearningService';
 
 const QUESTION_COUNT = 5;
 
@@ -54,6 +55,7 @@ const Eiken4SentencesPage: React.FC = () => {
   const checkAnswer = () => {
     const correct = builtWords.join(' ') === current.words.join(' ');
     if (isSoundEnabled) (correct ? playCorrectSound : playIncorrectSound)();
+    recordSentenceLearning('eiken4', 'sentences', current, correct);
     setIsCorrect(correct);
     setChecked(true);
     if (correct) {
@@ -96,6 +98,10 @@ const Eiken4SentencesPage: React.FC = () => {
         <section className="bg-white p-5 rounded-xl shadow-xl mb-5">
           <p className="text-center text-sm font-semibold text-slate-500 mb-2">これを英語にしよう</p>
           <p className="text-center text-2xl md:text-3xl font-bold text-amber-600 mb-5">{current.japaneseQuestion}</p>
+          <div className="flex flex-wrap justify-center gap-2 mb-5 text-xs font-bold">
+            <span className="rounded-full bg-violet-100 text-violet-800 px-3 py-1">{getSentenceDifficulty(current)}</span>
+            {getCurriculumLabels('eiken4', 'sentences', current).map(label => <span key={label} className="rounded-full bg-emerald-100 text-emerald-800 px-3 py-1">{label}</span>)}
+          </div>
           <SentenceConstructionArea builtWords={builtWords} onWordClick={removeWord} />
           <WordBank words={wordBank} onWordClick={addWord} />
         </section>
@@ -107,6 +113,8 @@ const Eiken4SentencesPage: React.FC = () => {
             </p>
             <p className="text-slate-700 mt-2">正解: <span className="font-semibold text-blue-700">{formatSentence(current)}</span></p>
             <p className="text-sm text-slate-600 mt-2">{current.grammarTag}: {current.explanation}</p>
+            {!isCorrect && <p className="text-sm font-bold text-rose-700 mt-2">見直すポイント：{classifyWeakness(current)}</p>}
+            <p className="text-xs text-slate-500 mt-2">定着度：{getMasteryLevel(getSentenceLearningRecord('eiken4', 'sentences', current.id))}・{formatReviewDate(getSentenceLearningRecord('eiken4', 'sentences', current.id)?.nextReview)}</p>
           </section>
         )}
 
