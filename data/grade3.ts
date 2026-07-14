@@ -1,6 +1,7 @@
 import { Grade } from '../types';
+import { GRADE_2_UNITS } from './grade2';
 
-export const GRADE_3_UNIT_0_SENTENCES: Grade['units'][0]['sentences'] = [
+const GRADE_3_UNIT_0_PASSIVE_REVIEW: Grade['units'][0]['sentences'] = [
   { id: "g3u0s1", japaneseQuestion: "この寺は500年前に建てられました。", words: ["This", "temple", "was", "built", "500", "years", "ago", "."], grammarTag: "受け身 (過去)", explanation: "「〜される」という受け身の文です。過去の出来事なので was/were を使います。" },
   { id: "g3u0s2", japaneseQuestion: "英語は世界中で話されています。", words: ["English", "is", "spoken", "all", "over", "the", "world", "."], grammarTag: "受け身 (現在)", explanation: "speakの過去分詞はspokenです。現在の事実を表すのでisを使います。" },
   { id: "g3u0s3", japaneseQuestion: "そのケーキは私の姉によって作られました。", words: ["The", "cake", "was", "made", "by", "my", "sister", "."], grammarTag: "受け身 (by 〜)", explanation: "by 〜で「〜によって」と行為者を表します。" },
@@ -53,7 +54,13 @@ export const GRADE_3_UNIT_0_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g3u0s50", japaneseQuestion: "私はそのパーティーに招待されませんでした。", words: ["I", "was", "not", "invited", "to", "the", "party", "."], grammarTag: "受け身の否定文", explanation: "「招待されなかった」という過去の出来事を表します。" },
 ];
 
-export const GRADE_3_UNIT_1_SENTENCES: Grade['units'][0]['sentences'] = [
+// Unit 0 は中2までの総復習。各Unitから均等に取り、受け身だけに偏らせない。
+export const GRADE_3_UNIT_0_SENTENCES: Grade['units'][0]['sentences'] = [
+  ...GRADE_2_UNITS.slice(1).flatMap(unit => unit.sentences.slice(0, 6)),
+  ...GRADE_3_UNIT_0_PASSIVE_REVIEW.slice(0, 8),
+];
+
+const GRADE_3_UNIT_1_BASE_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g3u1s1", japaneseQuestion: "私は3年間、ここに住んでいます。", words: ["I", "have", "lived", "here", "for", "three", "years", "."], grammarTag: "現在完了形「継続」", explanation: "過去から現在までの継続を表します。forは期間を示します。" },
   { id: "g3u1s2", japaneseQuestion: "あなたはその本をもう読みましたか？", words: ["Have", "you", "read", "the", "book", "yet", "?"], grammarTag: "現在完了形「完了」", explanation: "「もう〜したか」と完了を尋ねます。疑問文ではyetを使います。" },
   { id: "g3u1s3", japaneseQuestion: "私は一度もハワイに行ったことがありません。", words: ["I", "have", "never", "been", "to", "Hawaii", "."], grammarTag: "現在完了形「経験」", explanation: "neverを使って「一度も〜ない」という経験の否定を表します。" },
@@ -105,6 +112,14 @@ export const GRADE_3_UNIT_1_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g3u1s49", japaneseQuestion: "私は2回、京都を訪れたことがあります。", words: ["I", "have", "visited", "Kyoto", "twice", "."], grammarTag: "現在完了形「経験」", explanation: "twiceを使って「2回」という経験を表します。" },
   { id: "g3u1s50", japaneseQuestion: "あなたはどのくらいの間、英語を勉強していますか？", words: ["How", "long", "have", "you", "been", "studying", "English", "?"], grammarTag: "現在完了進行形", explanation: "学習の継続期間を尋ねます。" },
 ];
+
+// 2025年度版 Unit 1：現在完了（経験）、SVOC（C=形容詞）、SVOO（that節）。
+export const GRADE_3_UNIT_1_SENTENCES = GRADE_3_UNIT_1_BASE_SENTENCES.filter(sentence =>
+  sentence.grammarTag.includes('現在完了形「経験」')
+  || sentence.grammarTag === 'make A B'
+  || sentence.grammarTag === 'keep A B'
+  || sentence.grammarTag === 'tell + 人 + that 〜',
+);
 
 export const GRADE_3_UNIT_2_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g3u2s1", japaneseQuestion: "私はちょうど昼食を食べ終えたところです。", words: ["I", "have", "just", "finished", "lunch", "."], grammarTag: "現在完了形「完了」", explanation: "justを使って「ちょうど〜したところだ」という完了を表します。" },
@@ -159,7 +174,7 @@ export const GRADE_3_UNIT_2_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g3u2s50", japaneseQuestion: "雪が昨夜から降り続いています。", words: ["It", "has", "been", "snowing", "since", "last", "night", "."], grammarTag: "現在完了進行形", explanation: "天候の継続です。" },
 ];
 
-export const GRADE_3_UNIT_3_SENTENCES: Grade['units'][0]['sentences'] = [
+const GRADE_3_UNIT_3_BASE_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g3u3s1", japaneseQuestion: "毎日運動することは重要です。", words: ["It", "is", "important", "to", "exercise", "every", "day", "."], grammarTag: "It's important to 〜", explanation: "Itが形式主語で、to以下が真主語となる構文です。" },
   { id: "g3u3s2", japaneseQuestion: "私はあなたに手伝ってほしいです。", words: ["I", "want", "you", "to", "help", "me", "."], grammarTag: "want + 人 + to 〜", explanation: "「（人）に〜してほしい」という意味です。" },
   { id: "g3u3s3", japaneseQuestion: "彼は私に彼の部屋を掃除させました。", words: ["He", "made", "me", "clean", "his", "room", "."], grammarTag: "原形不定詞 (make)", explanation: "make + 人 + 動詞の原形で「（人）に（強制的に）〜させる」という意味です。" },
@@ -212,7 +227,16 @@ export const GRADE_3_UNIT_3_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g3u3s50", japaneseQuestion: "私は彼に車を修理してもらいました。", words: ["I", "had", "him", "repair", "the", "car", "."], grammarTag: "原形不定詞 (have)", explanation: "「彼に〜してもらう」という使役の文です。" },
 ];
 
-export const GRADE_3_UNIT_4_SENTENCES: Grade['units'][0]['sentences'] = [
+// 現行Unit 3：It is ... (for 人) to / want 人 to / let・help 人＋動詞原形。
+export const GRADE_3_UNIT_3_SENTENCES = GRADE_3_UNIT_3_BASE_SENTENCES.filter(sentence =>
+  sentence.grammarTag === 'It is ... for (人) to 〜'
+  || sentence.grammarTag === 'want + 人 + to 〜'
+  || sentence.grammarTag === '原形不定詞 (let)'
+  || sentence.grammarTag === '原形不定詞 (help)'
+  || sentence.grammarTag === 'help + 人 + to 〜',
+);
+
+const GRADE_3_UNIT_4_BASE_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g3u4s1", japaneseQuestion: "私は彼が何を欲しがっているか知りません。", words: ["I", "don't", "know", "what", "he", "wants", "."], grammarTag: "間接疑問文", explanation: "疑問詞の文が他の文の一部になる形で、語順が「疑問詞+主語+動詞」になります。" },
   { id: "g3u4s2", japaneseQuestion: "あそこで走っている少年を見てください。", words: ["Look", "at", "the", "boy", "running", "over", "there", "."], grammarTag: "名詞を修飾する-ing", explanation: "現在分詞(-ing)が名詞を後ろから修飾し、「〜している…」という意味を表します。" },
   { id: "g3u4s3", japaneseQuestion: "これは私の父によって撮られた写真です。", words: ["This", "is", "a", "picture", "taken", "by", "my", "father", "."], grammarTag: "名詞を修飾する過去分詞", explanation: "過去分詞が名詞を後ろから修飾し、「〜された…」という受け身の意味を表します。" },
@@ -265,7 +289,14 @@ export const GRADE_3_UNIT_4_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g3u4s50", japaneseQuestion: "これはアメリカで作られた映画です。", words: ["This", "is", "a", "movie", "made", "in", "the", "United", "States", "."], grammarTag: "名詞を修飾する過去分詞", explanation: "made in the United Statesがa movieを修飾しています。" },
 ];
 
-export const GRADE_3_UNIT_5_SENTENCES: Grade['units'][0]['sentences'] = [
+// 現行Unit 4：間接疑問文、SVOO（what節）、現在分詞・過去分詞の後置修飾。
+export const GRADE_3_UNIT_4_SENTENCES = GRADE_3_UNIT_4_BASE_SENTENCES.filter(sentence =>
+  sentence.grammarTag === '間接疑問文'
+  || sentence.grammarTag === '名詞を修飾する-ing'
+  || sentence.grammarTag === '名詞を修飾する過去分詞',
+);
+
+const GRADE_3_UNIT_5_BASE_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g3u5s1", japaneseQuestion: "これは私が昨日買った本です。", words: ["This", "is", "the", "book", "I", "bought", "yesterday", "."], grammarTag: "関係代名詞 (目的格省略)", explanation: "bookの後に目的格の関係代名詞that/whichが省略されています。" },
   { id: "g3u5s2", japaneseQuestion: "隣に住んでいる男性は医者です。", words: ["The", "man", "who", "lives", "next", "door", "is", "a", "doctor", "."], grammarTag: "関係代名詞 who (主格)", explanation: "先行詞(The man)が人で、関係詞節の中で主語の働きをする場合whoを使います。" },
   { id: "g3u5s3", japaneseQuestion: "これは空港へ行くバスです。", words: ["This", "is", "a", "bus", "which", "goes", "to", "the", "airport", "."], grammarTag: "関係代名詞 which (主格)", explanation: "先行詞(a bus)がもので、主語の働きをする場合whichを使います。" },
@@ -317,6 +348,16 @@ export const GRADE_3_UNIT_5_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g3u5s49", japaneseQuestion: "彼があなたに言ったことを信じてはいけません。", words: ["You", "shouldn't", "believe", "what", "he", "told", "you", "."], grammarTag: "関係代名詞 what", explanation: "whatは先行詞を含み「〜こと・もの」という意味を表します。" },
   { id: "g3u5s50", japaneseQuestion: "私が必要なのは、もう少しの時間です。", words: ["What", "I", "need", "is", "a", "little", "more", "time", "."], grammarTag: "関係代名詞 what", explanation: "What I need（私が必要なもの）が文の主語になっています。" },
 ];
+
+// 現行Unit 5：接触節、who、that / which（主格・目的格）。
+export const GRADE_3_UNIT_5_SENTENCES = GRADE_3_UNIT_5_BASE_SENTENCES.filter(sentence =>
+  sentence.grammarTag === '関係代名詞 (目的格省略)'
+  || sentence.grammarTag === '関係代名詞 who (主格)'
+  || sentence.grammarTag === '関係代名詞 that (主格)'
+  || sentence.grammarTag === '関係代名詞 that (目的格)'
+  || sentence.grammarTag === '関係代名詞 which (主格)'
+  || sentence.grammarTag === '関係代名詞 which (目的格)',
+);
 
 export const GRADE_3_UNIT_6_SENTENCES: Grade['units'][0]['sentences'] = [
   { id: "g3u6s1", japaneseQuestion: "私が鳥だったらなあ。", words: ["I", "wish", "I", "were", "a", "bird", "."], grammarTag: "仮定法 (I wish)", explanation: "現在の事実とは異なる願望を表します。be動詞は主語に関わらずwereを使います。" },
@@ -372,11 +413,11 @@ export const GRADE_3_UNIT_6_SENTENCES: Grade['units'][0]['sentences'] = [
 ];
 
 export const GRADE_3_UNITS: Grade['units'] = [
-    { id: 'u0', title: 'Unit 0: ２年生の復習 (受け身)', sentences: GRADE_3_UNIT_0_SENTENCES },
-    { id: 'u1', title: 'Unit 1: 現在完了形', sentences: GRADE_3_UNIT_1_SENTENCES },
-    { id: 'u2', title: 'Unit 2: 現在完了形 (継続・進行)', sentences: GRADE_3_UNIT_2_SENTENCES },
-    { id: 'u3', title: 'Unit 3: 不定詞の応用', sentences: GRADE_3_UNIT_3_SENTENCES },
-    { id: 'u4', title: 'Unit 4: 間接疑問文と分詞', sentences: GRADE_3_UNIT_4_SENTENCES },
-    { id: 'u5', title: 'Unit 5: 関係代名詞', sentences: GRADE_3_UNIT_5_SENTENCES },
-    { id: 'u6', title: 'Unit 6: 仮定法', sentences: GRADE_3_UNIT_6_SENTENCES },
+    { id: 'u0', title: 'Unit 0: Discover a New Side of Classmates（中2までの復習）', sentences: GRADE_3_UNIT_0_SENTENCES },
+    { id: 'u1', title: 'Unit 1: What is special about Japanese pop culture?', sentences: GRADE_3_UNIT_1_SENTENCES },
+    { id: 'u2', title: 'Unit 2: How do you choose your clothes?', sentences: GRADE_3_UNIT_2_SENTENCES },
+    { id: 'u3', title: 'Unit 3: How can we save animals?', sentences: GRADE_3_UNIT_3_SENTENCES },
+    { id: 'u4', title: 'Unit 4: How can we help each other in a disaster?', sentences: GRADE_3_UNIT_4_SENTENCES },
+    { id: 'u5', title: 'Unit 5: What makes a good leader?', sentences: GRADE_3_UNIT_5_SENTENCES },
+    { id: 'u6', title: 'Unit 6: What does it mean to be a global citizen?', sentences: GRADE_3_UNIT_6_SENTENCES },
 ];
