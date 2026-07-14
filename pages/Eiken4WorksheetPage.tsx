@@ -13,12 +13,12 @@ const Eiken4WorksheetPage: React.FC = () => {
 
   if (!shared) return <div className="flex-grow container mx-auto p-4 max-w-xl"><div className="mt-12 rounded-2xl bg-white shadow-xl p-7 text-center"><h1 className="text-2xl font-bold text-slate-800">リンクを読み込めませんでした</h1><p className="text-slate-600 mt-3">Google Chatのリンクを最後まで選んで、もう一度開いてください。</p><Button onClick={() => navigate('/eiken4')} className="w-full mt-6">英検4級ホームへ</Button></div></div>;
 
-  const { progress, reading } = shared;
+  const { progress, reading, grade1 } = shared;
   const correct = progress.answers.filter(answer => answer.correct).length;
   const weakKinds = Array.from(new Set(progress.answers.filter(answer => !answer.correct).map(answer => getQuestionById(answer.id, progress.date)?.kind).filter(Boolean)));
   const download = async () => {
     setStatus('making');
-    try { await downloadDailyWorksheet(progress, reading); setStatus('idle'); }
+    try { await downloadDailyWorksheet(progress, reading, grade1); setStatus('idle'); }
     catch { setStatus('error'); }
   };
 
