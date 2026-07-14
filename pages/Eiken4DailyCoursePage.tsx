@@ -44,6 +44,7 @@ const Eiken4DailyCoursePage: React.FC = () => {
     <header className="mt-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white p-6 shadow-lg">
       <p className="text-sm font-bold opacity-90">迷わず上から順番に</p><h1 className="text-3xl font-bold mt-1">今日の学習コース</h1><p className="mt-2">アプリ学習 {completed} / 4 完了</p>
     </header>
+    <button onClick={() => navigate('/eiken4/grammar-guide')} className="mt-4 w-full rounded-xl border border-cyan-200 bg-cyan-50 p-4 text-left"><p className="text-xs font-bold text-cyan-700">問題の文法がわからないとき</p><p className="font-bold text-slate-800 mt-1">習う前でもわかる「英検4級文法」を読む →</p></button>
     <div className="mt-5 space-y-3">{steps.map((step, index) => {
       const isNext = index === nextIndex;
       return <button key={step.title} onClick={() => navigate(step.path)} className={`w-full rounded-xl border-2 p-4 text-left shadow-sm flex items-center gap-3 ${step.done ? 'bg-emerald-50 border-emerald-300' : isNext ? 'bg-amber-50 border-amber-400' : 'bg-white border-slate-200'}`}>
