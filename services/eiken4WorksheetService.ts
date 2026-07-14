@@ -4,9 +4,10 @@ import { eiken4Words } from '../data/eiken4Words';
 import { eiken4Readings } from '../data/eiken4Readings';
 import { DailyProgress, getQuestionById } from './eiken4DailyService';
 import type { ReadingProgress } from './eiken4ReadingService';
+import { getGrade1DailyItems, getGrade1DailySelection, getGrade1ItemsBySelection, type Grade1Selection } from './grade1ReviewService';
 
-export type WorksheetShareData = Pick<DailyProgress, 'date' | 'questionIds' | 'answers'> & { reading?: ReadingProgress };
-export type SharedWorksheet = { progress: DailyProgress; reading?: ReadingProgress };
+export type WorksheetShareData = Pick<DailyProgress, 'date' | 'questionIds' | 'answers'> & { reading?: ReadingProgress; grade1?: Grade1Selection };
+export type SharedWorksheet = { progress: DailyProgress; reading?: ReadingProgress; grade1?: Grade1Selection };
 
 export const copyTextToClipboard = async (text: string) => {
   const fallbackCopy = () => {
@@ -40,7 +41,7 @@ export const copyTextToClipboard = async (text: string) => {
 };
 
 export const createWorksheetShareLink = (progress: DailyProgress, reading?: ReadingProgress) => {
-  const data: WorksheetShareData = { date: progress.date, questionIds: progress.questionIds, answers: progress.answers, ...(reading?.completedAt ? { reading } : {}) };
+  const data: WorksheetShareData = { date: progress.date, questionIds: progress.questionIds, answers: progress.answers, grade1: getGrade1DailySelection(progress.date), ...(reading?.completedAt ? { reading } : {}) };
   const bytes = new TextEncoder().encode(JSON.stringify(data));
   let binary = '';
   bytes.forEach(byte => { binary += String.fromCharCode(byte); });
@@ -58,7 +59,8 @@ export const parseWorksheetShareData = (encoded: string | null): SharedWorksheet
     if (data.questionIds.length < 1 || data.questionIds.length > 20) return null;
     if (data.questionIds.some(id => typeof id !== 'string' || !getQuestionById(id, data.date))) return null;
     const reading = data.reading?.completedAt && eiken4Readings.some(item => item.id === data.reading?.readingId) ? data.reading : undefined;
-    return { progress: { date: data.date, questionIds: data.questionIds, answers: data.answers, retryIds: [], retryAnswers: [], completedAt: data.date }, reading };
+    const grade1 = data.grade1?.wordIndexes?.length === 3 && data.grade1?.grammarIndexes?.length === 3 ? data.grade1 : undefined;
+    return { progress: { date: data.date, questionIds: data.questionIds, answers: data.answers, retryIds: [], retryAnswers: [], completedAt: data.date }, reading, grade1 };
   } catch {
     return null;
   }
@@ -171,7 +173,7 @@ const drawHeader = (context: CanvasRenderingContext2D, date: string, page: strin
   context.beginPath(); context.moveTo(70, 165); context.lineTo(1170, 165); context.stroke();
 };
 
-export const downloadDailyWorksheet = async (progress: DailyProgress, readingProgress?: ReadingProgress) => {
+export const downloadDailyWorksheet = async (progress: DailyProgress, readingProgress?: ReadingProgress, grade1Selection?: Grade1Selection) => {
   const { jsPDF } = await import('jspdf');
   const questions = makeWorksheet(progress);
   const pages: HTMLCanvasElement[] = [];
@@ -180,7 +182,7 @@ export const downloadDailyWorksheet = async (progress: DailyProgress, readingPro
     : eiken4Readings[hash(`${progress.date}-reading`) % eiken4Readings.length];
   const similarReadings = sourceReading ? eiken4Readings.filter(item => item.id !== sourceReading.id && item.type === sourceReading.type) : [];
   const similarReading = sourceReading ? (similarReadings[hash(`${progress.date}-${sourceReading.id}`) % Math.max(similarReadings.length, 1)] || eiken4Readings.find(item => item.id !== sourceReading.id)) : undefined;
-  const pageCount = 6;
+  const pageCount = 7;
 
   const writingWords = progress.questionIds.filter(id => id.startsWith('word-')).map(id => eiken4Words.find(word => `word-${word.id}` === id)).filter((word): word is (typeof eiken4Words)[number] => Boolean(word));
   const { canvas: writingPage, context: writingContext } = createPage();
@@ -248,6 +250,44 @@ export const downloadDailyWorksheet = async (progress: DailyProgress, readingPro
     pages.push(canvas);
   }
 
+  const grade1 = grade1Selection ? getGrade1ItemsBySelection(grade1Selection) : getGrade1DailyItems(progress.date);
+  const { canvas: grade1Page, context: grade1Context } = createPage();
+  drawHeader(grade1Context, progress.date, `6 / ${pageCount}`);
+  grade1Context.font = 'bold 29px sans-serif';
+  grade1Context.fillText('中1基礎　英単語3語＋文法3問', 70, 205);
+  grade1Context.font = '22px sans-serif';
+  grade1Context.fillText('英検4級の勉強に加えて、基本を毎日少しずつ確認しよう。', 70, 250);
+  let grade1Y = 310;
+  grade1.words.forEach(({ item }, index) => {
+    grade1Context.font = 'bold 25px sans-serif';
+    grade1Context.fillStyle = '#111827';
+    grade1Context.fillText(`${index + 1}. ${item.word}（${item.meaning}）`, 75, grade1Y);
+    grade1Y += 38;
+    grade1Context.font = '21px sans-serif';
+    grade1Context.fillStyle = '#475569';
+    grade1Context.fillText(item.example, 100, grade1Y);
+    grade1Y += 42;
+    for (let line = 0; line < 2; line++) {
+      grade1Context.strokeStyle = '#94a3b8';
+      grade1Context.beginPath(); grade1Context.moveTo(100, grade1Y + 20); grade1Context.lineTo(1150, grade1Y + 20); grade1Context.stroke();
+      grade1Y += 38;
+    }
+    grade1Y += 12;
+  });
+  grade1Context.font = 'bold 25px sans-serif';
+  grade1Context.fillStyle = '#111827';
+  grade1Context.fillText('文法　日本語を英文にしよう', 75, grade1Y + 5);
+  grade1Y += 55;
+  grade1.grammar.forEach(({ item }, index) => {
+    grade1Context.font = 'bold 22px sans-serif';
+    grade1Context.fillText(`${index + 1}.［${item.title}］${item.question}`, 80, grade1Y);
+    grade1Y += 38;
+    grade1Context.strokeStyle = '#94a3b8';
+    grade1Context.beginPath(); grade1Context.moveTo(100, grade1Y + 20); grade1Context.lineTo(1150, grade1Y + 20); grade1Context.stroke();
+    grade1Y += 58;
+  });
+  pages.push(grade1Page);
+
   const { canvas: answerPage, context } = createPage();
   drawHeader(context, progress.date, `${pageCount} / ${pageCount}`, true);
   let y = 200;
@@ -272,6 +312,17 @@ export const downloadDailyWorksheet = async (progress: DailyProgress, readingPro
       context.fillStyle = '#111827';
     });
   }
+  context.font = 'bold 21px sans-serif';
+  context.fillStyle = '#111827';
+  y = drawLines(context, '中1基礎', 70, y + 12, 1100, 30);
+  grade1.grammar.forEach(({ item }, index) => {
+    y = drawLines(context, `${index + 1}. ${item.answer}`, 95, y + 3, 1075, 28);
+    context.font = '18px sans-serif';
+    context.fillStyle = '#475569';
+    y = drawLines(context, item.note, 115, y + 2, 1055, 25) + 6;
+    context.font = 'bold 21px sans-serif';
+    context.fillStyle = '#111827';
+  });
   pages.push(answerPage);
 
   const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
