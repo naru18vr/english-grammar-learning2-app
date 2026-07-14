@@ -2,6 +2,7 @@
 import { useReducer, useCallback, useEffect } from 'react';
 import { Sentence } from '../types';
 import { incrementSentenceMistakeCount } from '../localStorageService';
+import { recordSentenceLearning } from '../services/sentenceLearningService';
 
 // Utility to shuffle array
 export const shuffleArray = <T,>(array: T[]): T[] => {
@@ -175,7 +176,9 @@ export const useSentenceLogic = (sentences: Sentence[] | undefined, gradeId?: st
     if (gradeId && unitId && state.currentSentence) {
       const userAnswer = state.builtWords.join(' ');
       const correctAnswer = state.currentSentence.words.join(' ');
-      if (userAnswer !== correctAnswer) {
+      const correct = userAnswer === correctAnswer;
+      recordSentenceLearning(gradeId, unitId, state.currentSentence, correct);
+      if (!correct) {
         incrementSentenceMistakeCount(gradeId, unitId, state.currentSentence.id);
       }
     }
