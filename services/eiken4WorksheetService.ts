@@ -9,19 +9,14 @@ export type WorksheetShareData = Pick<DailyProgress, 'date' | 'questionIds' | 'a
 export type SharedWorksheet = { progress: DailyProgress; reading?: ReadingProgress };
 
 export const copyTextToClipboard = async (text: string) => {
-  try {
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(text);
-      return true;
-    }
-  } catch { /* use the Android-compatible fallback below */ }
-  try {
+  const fallbackCopy = () => {
     const area = document.createElement('textarea');
     area.value = text;
-    area.setAttribute('readonly', '');
     area.style.position = 'fixed';
-    area.style.left = '-9999px';
-    area.style.top = '0';
+    area.style.inset = '0';
+    area.style.width = '1px';
+    area.style.height = '1px';
+    area.style.opacity = '0';
     document.body.appendChild(area);
     area.focus();
     area.select();
@@ -29,6 +24,16 @@ export const copyTextToClipboard = async (text: string) => {
     const copied = document.execCommand('copy');
     area.remove();
     return copied;
+  };
+
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch { /* use the Android-compatible fallback below */ }
+  try {
+    return fallbackCopy();
   } catch {
     return false;
   }
@@ -36,14 +41,19 @@ export const copyTextToClipboard = async (text: string) => {
 
 export const createWorksheetShareLink = (progress: DailyProgress, reading?: ReadingProgress) => {
   const data: WorksheetShareData = { date: progress.date, questionIds: progress.questionIds, answers: progress.answers, ...(reading?.completedAt ? { reading } : {}) };
-  const encoded = btoa(JSON.stringify(data));
+  const bytes = new TextEncoder().encode(JSON.stringify(data));
+  let binary = '';
+  bytes.forEach(byte => { binary += String.fromCharCode(byte); });
+  const encoded = btoa(binary);
   return `${window.location.href.split('#')[0]}#/eiken4/worksheet?data=${encodeURIComponent(encoded)}`;
 };
 
 export const parseWorksheetShareData = (encoded: string | null): SharedWorksheet | null => {
   if (!encoded) return null;
   try {
-    const data = JSON.parse(atob(decodeURIComponent(encoded))) as WorksheetShareData;
+    const binary = atob(decodeURIComponent(encoded));
+    const bytes = Uint8Array.from(binary, character => character.charCodeAt(0));
+    const data = JSON.parse(new TextDecoder().decode(bytes)) as WorksheetShareData;
     if (!/^\d{4}-\d{2}-\d{2}$/.test(data.date) || !Array.isArray(data.questionIds) || !Array.isArray(data.answers)) return null;
     if (data.questionIds.length < 1 || data.questionIds.length > 20) return null;
     if (data.questionIds.some(id => typeof id !== 'string' || !getQuestionById(id, data.date))) return null;
