@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import ArrowLeftIcon from '../components/shared/ArrowLeftIcon';
 import ChevronRightIcon from '../components/shared/ChevronRightIcon';
@@ -26,7 +26,9 @@ const topics: Topic[] = [
 
 const Eiken4GrammarGuidePage: React.FC = () => {
   const navigate = useNavigate();
-  const [openId, setOpenId] = useState<string | null>(topics[0].id);
+  const location = useLocation();
+  const requestedTopic = new URLSearchParams(location.search).get('topic');
+  const [openId, setOpenId] = useState<string | null>(topics.some(topic => topic.id === requestedTopic) ? requestedTopic : topics[0].id);
   const [answers, setAnswers] = useState<Record<string,string>>({});
   return <div className="flex-grow bg-gradient-to-b from-cyan-50 to-white p-4 sm:p-6">
     <div className="mx-auto max-w-2xl">
