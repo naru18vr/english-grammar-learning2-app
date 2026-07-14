@@ -11,6 +11,11 @@ export const recordWordCardsDone = (day = localDay()) => { if (typeof localStora
 export const areWordCardsDoneToday = () => typeof localStorage !== 'undefined' && localStorage.getItem(CARD_DAILY_KEY) === localDay();
 export const recordWordQuizDone = (day = localDay()) => { if (typeof localStorage !== 'undefined') localStorage.setItem(QUIZ_DAILY_KEY, day); };
 export const isWordQuizDoneToday = () => typeof localStorage !== 'undefined' && localStorage.getItem(QUIZ_DAILY_KEY) === localDay();
+export const resetTodayWordCourse = () => {
+  if (typeof localStorage === 'undefined') return;
+  localStorage.removeItem(CARD_DAILY_KEY);
+  localStorage.removeItem(QUIZ_DAILY_KEY);
+};
 export const loadWordMastery = (): WordMasteryMap => {
   if (typeof localStorage === 'undefined') return {};
   try {
