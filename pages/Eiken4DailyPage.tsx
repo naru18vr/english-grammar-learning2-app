@@ -22,7 +22,7 @@ const Eiken4DailyPage: React.FC = () => {
   const [audioStatus, setAudioStatus] = useState<'idle' | 'loading' | 'playing' | 'error'>('idle');
   const [audioMessage, setAudioMessage] = useState('');
   const [pdfStatus, setPdfStatus] = useState<'idle' | 'making' | 'error'>('idle');
-  const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'error'>('idle');
+  const [copyStatus, setCopyStatus] = useState<'idle' | 'copying' | 'copied' | 'error'>('idle');
   const [parentMessage, setParentMessage] = useState('');
   const baseDone = progress.answers.length >= progress.questionIds.length;
   const retryDone = progress.retryAnswers.length >= progress.retryIds.length;
@@ -95,11 +95,16 @@ const Eiken4DailyPage: React.FC = () => {
       }
     };
     const copyParentMessage = async () => {
-      const score = progress.answers.filter(answer => answer.correct).length;
-      const reading = loadReadingProgress();
-      const message = `今日の15分を完了しました！\n正解：${score} / ${progress.questionIds.length}問${reading.completedAt ? '\nミニ長文も完了しました！' : ''}\n今日の類題プリントはこちら\n${createWorksheetShareLink(progress, reading)}`;
-      setParentMessage(message);
-      setCopyStatus(await copyTextToClipboard(message) ? 'copied' : 'error');
+      setCopyStatus('copying');
+      try {
+        const score = progress.answers.filter(answer => answer.correct).length;
+        const reading = loadReadingProgress();
+        const message = `今日の15分を完了しました！\n正解：${score} / ${progress.questionIds.length}問${reading.completedAt ? '\nミニ長文も完了しました！' : ''}\n今日の類題プリントはこちら\n${createWorksheetShareLink(progress, reading)}`;
+        setParentMessage(message);
+        setCopyStatus(await copyTextToClipboard(message) ? 'copied' : 'error');
+      } catch {
+        setCopyStatus('error');
+      }
     };
     return (
       <div className="flex-grow container mx-auto p-4 sm:p-6 max-w-xl">
@@ -113,10 +118,11 @@ const Eiken4DailyPage: React.FC = () => {
             <p className="font-bold text-amber-900">保護者の方へ</p>
             <p className="text-sm text-amber-900 mt-1">今日の8単語を3回ずつ書くページ、別問題15問、長文、解答・解説をA4 PDFで作ります。</p>
             <Button onClick={copyParentMessage} className="mt-3 w-full">
-              {copyStatus === 'copied' ? 'コピーしました！' : '結果と印刷リンクをコピー'}
+              {copyStatus === 'copying' ? 'コピー中…' : copyStatus === 'copied' ? 'コピーしました！' : '結果と印刷リンクをコピー'}
             </Button>
             <p className="text-xs text-amber-800 mt-2">Google Chatに貼り付けて、結果画面のスクショと一緒に送れます。</p>
-            {copyStatus === 'error' && <p className="text-sm text-rose-700 font-bold mt-2">コピーできませんでした。Chromeの権限をご確認ください。</p>}
+            {copyStatus === 'copied' && <p className="text-sm text-emerald-700 font-bold mt-2">コピーしました！ Google Chatに貼り付けてください。</p>}
+            {copyStatus === 'error' && <p className="text-sm text-rose-700 font-bold mt-2">自動コピーできませんでした。下の文章を長押ししてコピーしてください。</p>}
             {copyStatus === 'error' && <textarea readOnly value={parentMessage} onFocus={event => event.currentTarget.select()} className="mt-2 w-full h-36 rounded-lg border border-amber-300 bg-white p-2 text-xs text-slate-700" aria-label="Google Chatへ送る文章" />}
             <Button onClick={downloadWorksheet} disabled={pdfStatus === 'making'} variant="secondary" className="mt-3 w-full">
               {pdfStatus === 'making' ? 'PDFを作成中…' : '今日の類題プリントPDF'}
