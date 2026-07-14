@@ -1,32 +1,39 @@
-// services/soundService.ts
+let audioContext: AudioContext | null = null;
 
-const playSound = (frequency: number, type: OscillatorType) => {
-  if (typeof window.AudioContext === 'undefined' && typeof (window as any).webkitAudioContext === 'undefined') {
-    console.warn('Web Audio API is not supported in this browser.');
-    return;
-  }
-  const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-  const oscillator = audioCtx.createOscillator();
-  const gainNode = audioCtx.createGain();
+const getAudioContext = () => {
+  const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  if (!AudioContextClass) return null;
+  audioContext ??= new AudioContextClass();
+  if (audioContext.state === 'suspended') void audioContext.resume();
+  return audioContext;
+};
 
-  oscillator.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
-  
-  gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-  gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.01); // Quick fade in
-
+const playTone = (context: AudioContext, frequency: number, start: number, duration: number, type: OscillatorType, volume: number) => {
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
   oscillator.type = type;
-  oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
-  oscillator.start(audioCtx.currentTime);
-  
-  gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.2); // Fade out
-  oscillator.stop(audioCtx.currentTime + 0.2);
+  oscillator.frequency.setValueAtTime(frequency, start);
+  gain.gain.setValueAtTime(0.0001, start);
+  gain.gain.exponentialRampToValueAtTime(volume, start + 0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+  oscillator.connect(gain);
+  gain.connect(context.destination);
+  oscillator.start(start);
+  oscillator.stop(start + duration + 0.02);
 };
 
 export const playCorrectSound = () => {
-  playSound(880.0, 'sine'); // Higher, pleasant tone
+  const context = getAudioContext();
+  if (!context) return;
+  const now = context.currentTime + 0.01;
+  playTone(context, 660, now, 0.16, 'sine', 0.28);
+  playTone(context, 990, now + 0.17, 0.28, 'sine', 0.3);
 };
 
 export const playIncorrectSound = () => {
-  playSound(220.0, 'square'); // Lower, buzzer-like tone
+  const context = getAudioContext();
+  if (!context) return;
+  const now = context.currentTime + 0.01;
+  playTone(context, 190, now, 0.2, 'square', 0.16);
+  playTone(context, 150, now + 0.24, 0.3, 'square', 0.16);
 };
