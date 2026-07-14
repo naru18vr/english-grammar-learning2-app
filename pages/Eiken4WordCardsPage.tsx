@@ -6,6 +6,8 @@ import { eiken4Words } from '../data/eiken4Words';
 import { useEiken4Session } from '../contexts/Eiken4SessionContext';
 import SpeakerWaveIcon from '../components/shared/SpeakerWaveIcon';
 import { speakText } from '../services/speechService';
+import { useAppContext } from '../contexts/AppContext';
+import { playCorrectSound, playIncorrectSound } from '../services/soundService';
 
 const CARD_COUNT = 10;
 
@@ -21,6 +23,7 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 const Eiken4WordCardsPage: React.FC = () => {
   const navigate = useNavigate();
   const { completeWords } = useEiken4Session();
+  const { isSoundEnabled } = useAppContext();
   const words = useMemo(() => shuffleArray(eiken4Words).slice(0, CARD_COUNT), []);
   const [index, setIndex] = useState(0);
   const [showMeaning, setShowMeaning] = useState(false);
@@ -32,6 +35,7 @@ const Eiken4WordCardsPage: React.FC = () => {
   const isLast = index >= words.length - 1;
 
   const answer = (known: boolean) => {
+    if (isSoundEnabled) (known ? playCorrectSound : playIncorrectSound)();
     const nextKnown = known ? knownCount + 1 : knownCount;
     const nextReview = known ? reviewWords : [...reviewWords, `${current.word} / ${current.meaning}`];
 
