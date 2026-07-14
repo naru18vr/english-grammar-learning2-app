@@ -6,9 +6,12 @@ import CheckCircleIcon from '../components/shared/CheckCircleIcon';
 import SpeakerWaveIcon from '../components/shared/SpeakerWaveIcon';
 import { getQuestionById, loadDailyProgress, recordReviewAnswer, saveDailyProgress } from '../services/eiken4DailyService';
 import { isSpeechSupported, speakText } from '../services/speechService';
+import { useAppContext } from '../contexts/AppContext';
+import { playCorrectSound, playIncorrectSound } from '../services/soundService';
 
 const Eiken4DailyPage: React.FC = () => {
   const navigate = useNavigate();
+  const { isSoundEnabled } = useAppContext();
   const [progress, setProgress] = useState(loadDailyProgress);
   const [selected, setSelected] = useState<string | null>(null);
   const [playCount, setPlayCount] = useState(0);
@@ -90,6 +93,11 @@ const Eiken4DailyPage: React.FC = () => {
   }
 
   const answeredCorrectly = selected === current.answer;
+  const selectAnswer = (choice: string) => {
+    if (selected) return;
+    if (isSoundEnabled) (choice === current.answer ? playCorrectSound : playIncorrectSound)();
+    setSelected(choice);
+  };
   return (
     <div className="flex-grow container mx-auto p-4 sm:p-6 max-w-xl">
       <Button onClick={() => navigate('/eiken4')} variant="ghost" size="sm" className="mb-4 text-slate-600">
@@ -119,7 +127,7 @@ const Eiken4DailyPage: React.FC = () => {
           {current.choices.map(choice => {
             const showCorrect = selected && choice === current.answer;
             const showWrong = selected === choice && choice !== current.answer;
-            return <button key={choice} onClick={() => !selected && setSelected(choice)} className={`p-4 rounded-xl border-2 text-left font-semibold transition-colors ${showCorrect ? 'border-emerald-500 bg-emerald-50 text-emerald-800' : showWrong ? 'border-rose-500 bg-rose-50 text-rose-800' : 'border-slate-200 bg-white text-slate-700 hover:border-indigo-300'}`}>{choice}</button>;
+            return <button key={choice} onClick={() => selectAnswer(choice)} className={`p-4 rounded-xl border-2 text-left font-semibold transition-colors ${showCorrect ? 'border-emerald-500 bg-emerald-50 text-emerald-800' : showWrong ? 'border-rose-500 bg-rose-50 text-rose-800' : 'border-slate-200 bg-white text-slate-700 hover:border-indigo-300'}`}>{choice}</button>;
           })}
         </div>
         {selected && <div className={`mt-5 p-4 rounded-xl ${answeredCorrectly ? 'bg-emerald-50' : 'bg-amber-50'}`}>
