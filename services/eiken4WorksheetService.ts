@@ -4,7 +4,7 @@ import { eiken4Words } from '../data/eiken4Words';
 import { eiken4Readings } from '../data/eiken4Readings';
 import { DailyProgress, getQuestionById } from './eiken4DailyService';
 import type { ReadingProgress } from './eiken4ReadingService';
-import { getGrade1DailyItems, getGrade1DailySelection, getGrade1ItemsBySelection, type Grade1Selection } from './grade1ReviewService';
+import { getGrade1DailyItems, getGrade1DailySelection, getGrade1ItemsBySelection, grade1GrammarItems, type Grade1Selection } from './grade1ReviewService';
 
 export type WorksheetShareData = Pick<DailyProgress, 'date' | 'questionIds' | 'answers'> & { reading?: ReadingProgress; grade1?: Grade1Selection };
 export type SharedWorksheet = { progress: DailyProgress; reading?: ReadingProgress; grade1?: Grade1Selection };
@@ -61,7 +61,7 @@ export const parseWorksheetShareData = (encoded: string | null): SharedWorksheet
     const reading = data.reading?.completedAt && eiken4Readings.some(item => item.id === data.reading?.readingId) ? data.reading : undefined;
     const grade1Valid = data.grade1?.wordIndexes?.length === 3 && data.grade1?.grammarIndexes?.length === 3
       && data.grade1.wordIndexes.every(index => Number.isInteger(index) && index >= 0 && index < 72)
-      && data.grade1.grammarIndexes.every(index => Number.isInteger(index) && index >= 0 && index < 16);
+      && data.grade1.grammarIndexes.every(index => Number.isInteger(index) && index >= 0 && index < grade1GrammarItems.length);
     const grade1 = grade1Valid ? data.grade1 : undefined;
     return { progress: { date: data.date, questionIds: data.questionIds, answers: data.answers, retryIds: [], retryAnswers: [], completedAt: data.date }, reading, grade1 };
   } catch {
