@@ -7,6 +7,8 @@ import WordBank from '../components/WordBank';
 import { eiken4Sentences } from '../data/eiken4Sentences';
 import { Sentence } from '../types';
 import { useEiken4Session } from '../contexts/Eiken4SessionContext';
+import { useAppContext } from '../contexts/AppContext';
+import { playCorrectSound, playIncorrectSound } from '../services/soundService';
 
 const QUESTION_COUNT = 5;
 
@@ -24,6 +26,7 @@ const formatSentence = (sentence: Sentence) => sentence.words.join(' ').replace(
 const Eiken4SentencesPage: React.FC = () => {
   const navigate = useNavigate();
   const { completeSentences } = useEiken4Session();
+  const { isSoundEnabled } = useAppContext();
   const questions = useMemo(() => shuffleArray(eiken4Sentences).slice(0, QUESTION_COUNT), []);
   const [index, setIndex] = useState(0);
   const [builtWords, setBuiltWords] = useState<string[]>([]);
@@ -50,6 +53,7 @@ const Eiken4SentencesPage: React.FC = () => {
 
   const checkAnswer = () => {
     const correct = builtWords.join(' ') === current.words.join(' ');
+    if (isSoundEnabled) (correct ? playCorrectSound : playIncorrectSound)();
     setIsCorrect(correct);
     setChecked(true);
     if (correct) {
