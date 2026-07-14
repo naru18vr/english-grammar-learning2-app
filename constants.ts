@@ -9,7 +9,7 @@ export const SENTENCES_PER_SET = 10;
 export const GRADES_DATA: Grade[] = [
   {
     id: 'grade1',
-    name: '中学1年生',
+    name: '中学1年生（NEW HORIZON 2025）',
     iconColor: 'bg-green-500',
     units: GRADE_1_UNITS,
     aiDefaultConfig: {
