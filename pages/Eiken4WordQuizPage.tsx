@@ -10,7 +10,7 @@ import { useAppContext } from '../contexts/AppContext';
 import { playCorrectSound, playIncorrectSound } from '../services/soundService';
 import { recordWordMastery } from '../services/eiken4WordMasteryService';
 
-const QUIZ_COUNT = 10;
+const QUIZ_COUNT = 8;
 
 const shuffleArray = <T,>(array: T[]): T[] => {
   const next = [...array];
@@ -30,9 +30,12 @@ const makeChoices = (target: Eiken4Word) => {
 
 const Eiken4WordQuizPage: React.FC = () => {
   const navigate = useNavigate();
-  const { completeWordQuiz } = useEiken4Session();
+  const { completeWordQuiz, result } = useEiken4Session();
   const { isSoundEnabled } = useAppContext();
-  const quizWords = useMemo(() => shuffleArray(eiken4Words).slice(0, QUIZ_COUNT), []);
+  const quizWords = useMemo(() => {
+    const cardWords = result.wordIds.map(id => eiken4Words.find(word => word.id === id)).filter((word): word is Eiken4Word => Boolean(word));
+    return cardWords.length ? cardWords : shuffleArray(eiken4Words).slice(0, QUIZ_COUNT);
+  }, [result.wordIds]);
   const [index, setIndex] = useState(0);
   const [choices, setChoices] = useState<string[]>(() => makeChoices(quizWords[0]));
   const [selected, setSelected] = useState('');
