@@ -10,6 +10,7 @@ import { useEiken4Session } from '../contexts/Eiken4SessionContext';
 import { useAppContext } from '../contexts/AppContext';
 import { playCorrectSound, playIncorrectSound } from '../services/soundService';
 import { classifyWeakness, formatReviewDate, getCurriculumLabels, getMasteryLevel, getSentenceDifficulty, getSentenceLearningRecord, recordSentenceLearning } from '../services/sentenceLearningService';
+import Eiken4GrammarReference from '../components/Eiken4GrammarReference';
 
 const QUESTION_COUNT = 5;
 
@@ -129,6 +130,7 @@ const Eiken4SentencesPage: React.FC = () => {
             <p className="text-slate-700 mt-2">正解: <span className="font-semibold text-blue-700">{formatSentence(current)}</span></p>
             <p className="text-sm text-slate-600 mt-2">{current.grammarTag}: {current.explanation}</p>
             {!isCorrect && <p className="text-sm font-bold text-rose-700 mt-2">見直すポイント：{classifyWeakness(current)}</p>}
+            {!isCorrect && <Eiken4GrammarReference source={`${current.grammarTag} ${current.explanation} ${current.japaneseQuestion}`} />}
             <p className="text-xs text-slate-500 mt-2">定着度：{getMasteryLevel(getSentenceLearningRecord('eiken4', 'sentences', current.id))}・{formatReviewDate(getSentenceLearningRecord('eiken4', 'sentences', current.id)?.nextReview)}</p>
           </section>
         )}
