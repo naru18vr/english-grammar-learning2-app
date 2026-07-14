@@ -11,7 +11,7 @@ import { useEiken4Session } from '../contexts/Eiken4SessionContext';
 import { getDueReviewCount, loadDailyProgress } from '../services/eiken4DailyService';
 import { loadReadingProgress } from '../services/eiken4ReadingService';
 import { loadGrade1Review } from '../services/grade1ReviewService';
-import { areWordCardsDoneToday } from '../services/eiken4WordMasteryService';
+import { isWordQuizDoneToday } from '../services/eiken4WordMasteryService';
 
 const Eiken4HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const Eiken4HomePage: React.FC = () => {
   const dueReviewCount = getDueReviewCount();
   const readingProgress = loadReadingProgress();
   const grade1Progress = loadGrade1Review();
-  const cardsDone = areWordCardsDoneToday();
+  const cardsDone = isWordQuizDoneToday();
   const courseDone = [Boolean(grade1Progress.completedAt), dailyDone, Boolean(readingProgress.completedAt), cardsDone].filter(Boolean).length;
 
   const startFresh = (path: string) => {
@@ -49,7 +49,7 @@ const Eiken4HomePage: React.FC = () => {
           <button onClick={() => navigate('/eiken4/grade1-review')} className={`rounded-2xl border p-4 text-left shadow-sm transition active:scale-95 ${grade1Progress.completedAt ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-amber-200'}`}><div className="flex items-center justify-between"><span className="text-xs font-bold text-amber-700">STEP 1</span>{grade1Progress.completedAt && <CheckCircleIcon className="h-5 w-5 text-emerald-500"/>}</div><h3 className="font-bold mt-2 text-slate-800">中1おさらい</h3><p className="text-xs text-slate-500 mt-1">{grade1Progress.completedAt ? '完了！' : `${grade1Progress.answers.length}/6問`}</p></button>
           <button onClick={() => navigate('/eiken4/daily')} className={`rounded-2xl border p-4 text-left shadow-sm transition active:scale-95 ${dailyDone ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-emerald-200'}`}><div className="flex items-center justify-between"><span className="text-xs font-bold text-emerald-700">STEP 2</span>{dailyDone && <CheckCircleIcon className="h-5 w-5 text-emerald-500"/>}</div><h3 className="font-bold mt-2 text-slate-800">今日の15分</h3><p className="text-xs text-slate-500 mt-1">{dailyDone ? '完了！' : dueReviewCount ? `復習${dueReviewCount}問あり` : `${dailyProgress.answers.length}/18問`}</p></button>
           <button onClick={() => navigate('/eiken4/reading')} className={`rounded-2xl border p-4 text-left shadow-sm transition active:scale-95 ${readingProgress.completedAt ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-sky-200'}`}><div className="flex items-center justify-between"><span className="text-xs font-bold text-sky-700">STEP 3</span>{readingProgress.completedAt && <CheckCircleIcon className="h-5 w-5 text-emerald-500"/>}</div><h3 className="font-bold mt-2 text-slate-800">ミニ長文</h3><p className="text-xs text-slate-500 mt-1">{readingProgress.completedAt ? '完了！' : readingProgress.answers.length ? `${readingProgress.answers.length}/2問` : '1題＋2問'}</p></button>
-          <button onClick={() => startFresh('/eiken4/words')} className={`rounded-2xl border p-4 text-left shadow-sm transition active:scale-95 ${cardsDone ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-indigo-200'}`}><div className="flex items-center justify-between"><span className="text-xs font-bold text-indigo-700">STEP 4</span>{cardsDone && <CheckCircleIcon className="h-5 w-5 text-emerald-500"/>}</div><h3 className="font-bold mt-2 text-slate-800">英単語カード</h3><p className="text-xs text-slate-500 mt-1">{cardsDone ? '完了！' : '苦手優先・8語'}</p></button>
+          <button onClick={() => startFresh('/eiken4/words')} className={`rounded-2xl border p-4 text-left shadow-sm transition active:scale-95 ${cardsDone ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-indigo-200'}`}><div className="flex items-center justify-between"><span className="text-xs font-bold text-indigo-700">STEP 4</span>{cardsDone && <CheckCircleIcon className="h-5 w-5 text-emerald-500"/>}</div><h3 className="font-bold mt-2 text-slate-800">英単語＋テスト</h3><p className="text-xs text-slate-500 mt-1">{cardsDone ? '完了！' : 'カード8語→確認テスト'}</p></button>
         </div></section>
 
         <section className="mt-9"><p className="text-xs font-bold tracking-wider text-rose-500">EXTRA</p><h2 className="text-xl font-bold text-slate-800 mt-1">余裕がある日に追加</h2><p className="text-sm text-slate-500 mt-1">毎日の必須メニューではありません</p><div className="mt-4 space-y-3">
