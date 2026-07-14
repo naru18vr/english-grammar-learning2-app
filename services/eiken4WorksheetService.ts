@@ -254,7 +254,7 @@ export const downloadDailyWorksheet = async (progress: DailyProgress, readingPro
   const { canvas: grade1Page, context: grade1Context } = createPage();
   drawHeader(grade1Context, progress.date, `6 / ${pageCount}`);
   grade1Context.font = 'bold 29px sans-serif';
-  grade1Context.fillText('中1基礎　英単語3語＋文法3問', 70, 205);
+  grade1Context.fillText('英検4級につながる中1基礎　単語3語＋文法3問', 70, 205);
   grade1Context.font = '22px sans-serif';
   grade1Context.fillText('英検4級の勉強に加えて、基本を毎日少しずつ確認しよう。', 70, 250);
   let grade1Y = 310;
