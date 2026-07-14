@@ -4,7 +4,7 @@ import { localDateKey } from './eiken4DailyService';
 
 const KEY = 'grade1DailyReviewV1';
 const COVERAGE_KEY = 'grade1DailyCoverageV1';
-const SELECTION_KEY = 'grade1DailySelectionV1';
+const SELECTION_KEY = 'grade1DailySelectionV2';
 const EIKEN4_WORDS = new Set([
   'where','when','school','teacher','student','family','breakfast','morning','today','tomorrow','every',
   'go','come','play','like','have','study','eat','drink','read','write','speak','watch','listen','help','know','want','live','make',
@@ -78,5 +78,9 @@ export const saveGrade1Review = (progress: Grade1ReviewProgress) => {
 };
 
 export const resetTodayGrade1Review = () => {
-  if (typeof localStorage !== 'undefined') localStorage.removeItem(KEY);
+  if (typeof localStorage !== 'undefined') {
+    localStorage.removeItem(KEY);
+    localStorage.removeItem(SELECTION_KEY);
+    localStorage.removeItem('grade1DailySelectionV1');
+  }
 };
