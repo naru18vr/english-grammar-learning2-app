@@ -8,6 +8,7 @@ import SpeakerWaveIcon from '../components/shared/SpeakerWaveIcon';
 import { speakText } from '../services/speechService';
 import { useAppContext } from '../contexts/AppContext';
 import { playCorrectSound, playIncorrectSound } from '../services/soundService';
+import { recordWordMastery } from '../services/eiken4WordMasteryService';
 
 const QUIZ_COUNT = 10;
 
@@ -45,6 +46,7 @@ const Eiken4WordQuizPage: React.FC = () => {
 
   const checkAnswer = () => {
     const correct = selected === current.meaning;
+    recordWordMastery(current.id, correct);
     if (isSoundEnabled) (correct ? playCorrectSound : playIncorrectSound)();
     setIsCorrect(correct);
     setChecked(true);
