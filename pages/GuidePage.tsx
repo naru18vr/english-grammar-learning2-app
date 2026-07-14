@@ -43,6 +43,7 @@ const GuidePage: React.FC = () => {
     </div></section>
 
     <section className="mt-8 rounded-xl bg-amber-50 border border-amber-200 p-5"><h2 className="font-bold text-amber-900 text-lg">続けるコツ</h2><ul className="mt-2 text-sm text-amber-900 leading-7 list-disc pl-5"><li>毎日全部できなくても、「今日の15分」だけはやる</li><li>分からなくても止まらず、答えと解説を読む</li><li>音が出ないときは端末の音量とChromeの音声設定を確認する</li><li>週に1回、学習ダッシュボードで苦手を確認する</li></ul></section>
+    <section className="mt-4 rounded-xl bg-indigo-50 border border-indigo-200 p-5"><h2 className="font-bold text-indigo-900 text-lg">7/20〜8/16の夏休みノルマ</h2><p className="text-sm text-indigo-900 mt-2 leading-7">24日学習＋4日予備。曜日に関係なく、学習日は「今日の15分（18問）→ミニ長文→単語カード8語→類似プリント」。休んでも未学習問題は次回へ持ち越されます。予備日を使わなかった日は復習またはミニ模試にします。</p></section>
     <Button onClick={() => navigate('/eiken4')} className="w-full mt-6">英検4級の学習を始める</Button>
   </div>;
 };
