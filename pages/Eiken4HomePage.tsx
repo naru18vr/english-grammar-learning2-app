@@ -69,6 +69,8 @@ const Eiken4HomePage: React.FC = () => {
         </button>
         <button onClick={() => navigate('/eiken4/exam-practice')} className="w-full p-5 rounded-xl shadow-lg bg-rose-600 text-white text-left hover:shadow-xl active:scale-95 transition-all"><div className="flex items-center justify-between"><div><p className="text-xs font-bold opacity-80">毎日10問</p><h2 className="text-xl font-bold">英検4級 本番形式</h2><p className="text-sm opacity-90">空所補充・会話・語句整序</p></div><ChevronRightIcon className="h-7 w-7 opacity-80"/></div></button>
 
+        <button onClick={() => navigate('/eiken4/word-map')} className="w-full p-5 rounded-xl shadow-lg bg-indigo-50 border-2 border-indigo-200 text-left hover:shadow-xl active:scale-95 transition-all"><div className="flex items-center justify-between"><div><p className="text-xs font-bold text-indigo-600">全128語の進み具合</p><h2 className="text-xl font-bold text-indigo-900">英単語マップ</h2><p className="text-sm text-indigo-700">覚えた・練習中・未学習</p></div><ChevronRightIcon className="h-7 w-7 text-indigo-500" /></div></button>
+
         <button
           onClick={() => startFresh('/eiken4/words')}
           className="w-full p-5 rounded-xl shadow-lg bg-white border border-indigo-100 text-left hover:shadow-xl active:scale-95 transition-all"
