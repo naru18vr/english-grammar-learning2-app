@@ -3,11 +3,14 @@ const KEY = 'eiken4WordMasteryV2';
 const LEGACY_KEY = 'eiken4WordMasteryV1';
 const IMPORT_KEY = 'eiken4WordMasteryImportedDaysV2';
 const CARD_DAILY_KEY = 'eiken4WordCardsDailyV1';
+const QUIZ_DAILY_KEY = 'eiken4WordQuizDailyV1';
 export type WordMastery = { days: Record<string, boolean>; correct: number; wrong: number; lastSeen: string };
 export type WordMasteryMap = Record<string, WordMastery>;
 const localDay = () => { const date = new Date(); return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; };
 export const recordWordCardsDone = (day = localDay()) => { if (typeof localStorage !== 'undefined') localStorage.setItem(CARD_DAILY_KEY, day); };
 export const areWordCardsDoneToday = () => typeof localStorage !== 'undefined' && localStorage.getItem(CARD_DAILY_KEY) === localDay();
+export const recordWordQuizDone = (day = localDay()) => { if (typeof localStorage !== 'undefined') localStorage.setItem(QUIZ_DAILY_KEY, day); };
+export const isWordQuizDoneToday = () => typeof localStorage !== 'undefined' && localStorage.getItem(QUIZ_DAILY_KEY) === localDay();
 export const loadWordMastery = (): WordMasteryMap => {
   if (typeof localStorage === 'undefined') return {};
   try {
