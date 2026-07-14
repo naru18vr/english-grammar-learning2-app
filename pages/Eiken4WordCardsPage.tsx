@@ -8,7 +8,7 @@ import SpeakerWaveIcon from '../components/shared/SpeakerWaveIcon';
 import { speakText } from '../services/speechService';
 import { useAppContext } from '../contexts/AppContext';
 import { playCorrectSound, playIncorrectSound } from '../services/soundService';
-import { recordWordMastery } from '../services/eiken4WordMasteryService';
+import { recordWordCardsDone, recordWordMastery } from '../services/eiken4WordMasteryService';
 import { loadWordMastery, masteryLevel } from '../services/eiken4WordMasteryService';
 
 const CARD_COUNT = 8;
@@ -48,6 +48,7 @@ const Eiken4WordCardsPage: React.FC = () => {
 
     if (isLast) {
       completeWords(words.length, nextKnown, nextReview, words.map(word => word.id));
+      recordWordCardsDone();
       setKnownCount(nextKnown);
       setReviewWords(nextReview);
       setIsComplete(true);
@@ -96,9 +97,10 @@ const Eiken4WordCardsPage: React.FC = () => {
             </div>
 
             <div className="space-y-3">
-              <Button onClick={() => navigate('/eiken4/words/quiz')} variant="primary" size="lg" className="w-full">
-                確認テストへ
+              <Button onClick={() => navigate('/eiken4/daily')} variant="primary" size="lg" className="w-full">
+                次は紙のプリントへ
               </Button>
+              <Button onClick={() => navigate('/eiken4/words/quiz')} variant="secondary" size="lg" className="w-full">余裕があれば単語テスト</Button>
               <Button onClick={restartCards} variant="secondary" size="lg" className="w-full">
                 もう一度カードを見る
               </Button>
