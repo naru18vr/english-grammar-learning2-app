@@ -8,7 +8,7 @@ import SpeakerWaveIcon from '../components/shared/SpeakerWaveIcon';
 import { speakText } from '../services/speechService';
 import { useAppContext } from '../contexts/AppContext';
 import { playCorrectSound, playIncorrectSound } from '../services/soundService';
-import { recordWordMastery } from '../services/eiken4WordMasteryService';
+import { recordWordMastery, recordWordQuizDone } from '../services/eiken4WordMasteryService';
 
 const QUIZ_COUNT = 8;
 
@@ -61,7 +61,8 @@ const Eiken4WordQuizPage: React.FC = () => {
 
     if (isLast) {
       completeWordQuiz(quizWords.length, nextCorrect, nextWrong);
-      navigate('/eiken4/result');
+      recordWordQuizDone();
+      navigate('/eiken4/daily');
       return;
     }
 
