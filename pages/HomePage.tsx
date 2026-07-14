@@ -21,6 +21,9 @@ const HomePage: React.FC = () => {
       
       <main className="max-w-xl mx-auto">
         <div className="flex flex-col gap-6">
+          <Link to="/guide" className="block rounded-xl border-2 border-indigo-200 bg-indigo-50 p-4 text-indigo-800 shadow hover:shadow-md transition-all">
+            <div className="flex items-center justify-between"><div className="flex items-center"><BookOpenIcon className="h-7 w-7 mr-3"/><div><h2 className="font-bold text-lg">このアプリの使い方</h2><p className="text-sm">毎日の進め方・できることを見る</p></div></div><ChevronRightIcon className="h-6 w-6"/></div>
+          </Link>
           {grades.map((grade) => (
             <GradeCard key={grade.id} grade={grade} />
           ))}
