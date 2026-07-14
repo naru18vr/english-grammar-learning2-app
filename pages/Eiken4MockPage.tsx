@@ -41,7 +41,7 @@ const Eiken4MockPage: React.FC = () => {
 
   if (!started) return <div className="flex-grow container mx-auto p-4 sm:p-6 max-w-xl">
     <Button onClick={() => navigate('/eiken4')} variant="ghost" size="sm"><ArrowLeftIcon className="h-5 w-5 mr-2"/>英検4級に戻る</Button>
-    <div className="mt-8 rounded-2xl bg-white shadow-xl border border-violet-100 p-7 text-center"><p className="text-violet-700 font-bold">週1回</p><h1 className="text-3xl font-bold text-slate-800 mt-2">10分ミニ模試</h1><p className="text-slate-600 mt-3">単語5問・文法4問・リスニング2問・長文2問</p><p className="text-sm text-slate-500 mt-2">開始後は途中で答えを表示しません。</p>
+    <div className="mt-8 rounded-2xl bg-white shadow-xl border border-violet-100 p-7 text-center"><p className="text-violet-700 font-bold">週1回</p><h1 className="text-3xl font-bold text-slate-800 mt-2">10分ミニ模試</h1><p className="text-slate-600 mt-3">単語5問・文法／本番形式6問・リスニング2問・長文2問</p><p className="text-sm text-slate-500 mt-2">開始後は途中で答えを表示しません。</p>
       {previous && <div className="mt-5 rounded-xl bg-slate-50 p-3"><p className="text-sm text-slate-500">前回の結果</p><p className="text-xl font-bold">{previous.score} / {previous.total}問</p></div>}
       <Button onClick={() => setStarted(true)} className="w-full mt-6">模試を始める</Button>
       {savedAttempt && <Button onClick={restart} variant="ghost" className="w-full mt-2">保存した模試を最初からやり直す</Button>}</div>
