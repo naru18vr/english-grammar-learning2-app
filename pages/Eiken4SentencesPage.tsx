@@ -28,7 +28,14 @@ const Eiken4SentencesPage: React.FC = () => {
   const navigate = useNavigate();
   const { completeSentences } = useEiken4Session();
   const { isSoundEnabled } = useAppContext();
-  const questions = useMemo(() => shuffleArray(eiken4Sentences).slice(0, QUESTION_COUNT), []);
+  const questions = useMemo(() => {
+    const shuffled = shuffleArray(eiken4Sentences);
+    return shuffled.sort((a, b) => {
+      const left = getSentenceLearningRecord('eiken4', 'sentences', a.id);
+      const right = getSentenceLearningRecord('eiken4', 'sentences', b.id);
+      return ((right?.wrong || 0) - (right?.correct || 0)) - ((left?.wrong || 0) - (left?.correct || 0));
+    }).slice(0, QUESTION_COUNT);
+  }, []);
   const [index, setIndex] = useState(0);
   const [builtWords, setBuiltWords] = useState<string[]>([]);
   const [wordBank, setWordBank] = useState<string[]>(() => shuffleArray(questions[0].words));
