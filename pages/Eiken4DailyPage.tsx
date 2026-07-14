@@ -110,7 +110,7 @@ const Eiken4DailyPage: React.FC = () => {
           <p className="text-sm text-indigo-700 font-semibold mt-2">次は翌日・3日後・7日後・14日後に自動で出題します。</p>
           <div className="mt-6 rounded-xl bg-amber-50 border border-amber-200 p-4 text-left">
             <p className="font-bold text-amber-900">保護者の方へ</p>
-            <p className="text-sm text-amber-900 mt-1">今日の内容に合った別問題15問と、解答・解説をA4 PDFで作ります。</p>
+            <p className="text-sm text-amber-900 mt-1">今日の8単語を3回ずつ書くページ、別問題15問、長文、解答・解説をA4 PDFで作ります。</p>
             <Button onClick={copyParentMessage} className="mt-3 w-full">
               {copyStatus === 'copied' ? 'コピーしました！' : '結果と印刷リンクをコピー'}
             </Button>
