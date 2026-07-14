@@ -5,6 +5,7 @@ import ArrowLeftIcon from '../components/shared/ArrowLeftIcon';
 import { useAppContext } from '../contexts/AppContext';
 import { getDailyExamQuestions, loadExamPractice, recordExamAnswer, saveExamPractice } from '../services/eiken4ExamService';
 import { playCorrectSound, playIncorrectSound } from '../services/soundService';
+import Eiken4GrammarReference from '../components/Eiken4GrammarReference';
 
 const Eiken4ExamPracticePage: React.FC = () => {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ const Eiken4ExamPracticePage: React.FC = () => {
       <h1 className="text-xl font-bold whitespace-pre-line leading-8">{current.prompt}</h1>
       {current.translation && <p className="text-sm text-slate-500 mt-2">{current.translation}</p>}
       <div className="grid gap-3 mt-5">{current.choices.map(choice => <button key={choice} disabled={checked || retrying} onClick={() => setSelected(choice)} className={`rounded-xl border-2 p-3 text-left font-semibold ${checked && choice === current.answer ? 'border-emerald-500 bg-emerald-50' : (checked || retrying) && choice === selected && !correct ? 'border-rose-500 bg-rose-50' : selected === choice ? 'border-indigo-500 bg-indigo-50' : 'border-slate-200'}`}>{choice}</button>)}</div>
-      {checked ? <div className="mt-5 rounded-xl bg-slate-50 p-4"><p className="font-bold">{correct ? '正解！' : `3回間違えました。正解：${current.answer}`}</p><p className="text-sm mt-2">{current.explanation}</p><Button onClick={next} className="w-full mt-4">次の問題</Button></div> : retrying ? <div className="mt-5 rounded-xl bg-amber-50 p-4"><p className="font-bold text-amber-800">不正解。答えはまだ見せません（{attempts}/3回）</p><Button onClick={() => { setSelected(''); setRetrying(false); }} variant="secondary" className="w-full mt-3">もう一度</Button></div> : <Button onClick={checkAnswer} disabled={!selected} className="w-full mt-5">答え合わせ</Button>}
+      {checked ? <div className="mt-5 rounded-xl bg-slate-50 p-4"><p className="font-bold">{correct ? '正解！' : `3回間違えました。正解：${current.answer}`}</p><p className="text-sm mt-2">{current.explanation}</p>{!correct && <Eiken4GrammarReference source={`${current.prompt} ${current.translation || ''} ${current.explanation}`} />}<Button onClick={next} className="w-full mt-4">次の問題</Button></div> : retrying ? <div className="mt-5 rounded-xl bg-amber-50 p-4"><p className="font-bold text-amber-800">不正解。答えはまだ見せません（{attempts}/3回）</p><Button onClick={() => { setSelected(''); setRetrying(false); }} variant="secondary" className="w-full mt-3">もう一度</Button></div> : <Button onClick={checkAnswer} disabled={!selected} className="w-full mt-5">答え合わせ</Button>}
     </section>
   </div>;
 };
