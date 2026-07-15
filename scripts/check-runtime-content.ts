@@ -72,7 +72,7 @@ if (new Set(eiken4Words.map(item => item.id)).size !== eiken4Words.length) error
 if (new Set(eiken4Words.map(item => item.word.toLowerCase())).size !== eiken4Words.length) errors.push('英検4級単語: 見出し語重複');
 
 for (const [gradeId, config] of Object.entries(gradeVocabularyData)) {
-  const expected = config.grade === 1 ? 72 : 96;
+  const expected = config.grade === 1 ? 72 : config.grade === 2 ? 96 : 108;
   if (config.words.length !== expected) errors.push(`${gradeId}英単語: ${config.words.length}語（${expected}語必要）`);
   if (new Set(config.words.map(item => item.word.toLowerCase())).size !== config.words.length) errors.push(`${gradeId}英単語: 見出し語重複`);
   if (config.words.some(item => !item.word || !item.meaning || !item.example)) errors.push(`${gradeId}英単語: 必須項目不足`);

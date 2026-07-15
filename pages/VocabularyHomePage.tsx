@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import ArrowLeftIcon from '../components/shared/ArrowLeftIcon';
 import BookOpenIcon from '../components/shared/BookOpenIcon';
-import ChevronRightIcon from '../components/shared/ChevronRightIcon';
 
 const VocabularyHomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -51,8 +50,19 @@ const VocabularyHomePage: React.FC = () => {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-slate-500">
-          <div className="flex items-center justify-between"><div><p className="text-xs font-bold">順次追加予定</p><h2 className="mt-1 text-xl font-bold text-slate-700">中学3年生</h2></div><ChevronRightIcon className="h-6 w-6 opacity-30" /></div>
+        <section className="rounded-2xl border border-indigo-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-3">
+            <span className="rounded-full bg-indigo-100 p-3"><BookOpenIcon className="h-7 w-7 text-indigo-700" /></span>
+            <div><p className="text-xs font-bold text-indigo-600">利用できます</p><h2 className="text-xl font-bold text-slate-800">中学3年生</h2><p className="text-sm text-slate-500">NEW HORIZON・基本108語</p></div>
+          </div>
+          <div className="mt-5 grid grid-cols-2 gap-3">
+            <Link to="/vocabulary/grade3/quiz" className="rounded-xl bg-indigo-600 p-4 text-white shadow transition active:scale-95">
+              <p className="text-xs font-bold text-indigo-100">毎回10問</p><h3 className="mt-1 font-bold">確認テスト</h3><p className="mt-1 text-xs text-indigo-50">意味を4択で確認</p>
+            </Link>
+            <Link to="/vocabulary/grade3/map" className="rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-indigo-900 transition active:scale-95">
+              <p className="text-xs font-bold text-indigo-600">進み具合</p><h3 className="mt-1 font-bold">英単語マップ</h3><p className="mt-1 text-xs text-indigo-700">覚えた語がひと目で分かる</p>
+            </Link>
+          </div>
         </section>
       </main>
     </div>
