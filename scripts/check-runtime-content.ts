@@ -67,7 +67,7 @@ for (const item of eiken4CoreSentences) {
 for (const item of eiken4CoreExamQuestions) {
   if (advanced.test(item.explanation)) errors.push(`英検4級演習: 範囲外文法 ${item.id}`);
 }
-if (eiken4Words.length < 120) errors.push(`英検4級単語: ${eiken4Words.length}語では不足`);
+if (eiken4Words.length < 180) errors.push(`英検4級単語: ${eiken4Words.length}語では不足`);
 if (new Set(eiken4Words.map(item => item.id)).size !== eiken4Words.length) errors.push('英検4級単語: ID重複');
 if (new Set(eiken4Words.map(item => item.word.toLowerCase())).size !== eiken4Words.length) errors.push('英検4級単語: 見出し語重複');
 

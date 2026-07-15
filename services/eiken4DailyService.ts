@@ -165,6 +165,17 @@ export const getReviewCategoryCounts = () => loadReviews().reduce((counts, recor
   counts[category] = (counts[category] || 0) + 1; return counts;
 }, {} as Record<string, number>);
 
+export const getWeakQuestions = (category: string, count = 10): DailyQuestion[] => {
+  const prefix = category === '単語' ? 'word-' : category === 'リスニング' ? 'listening-' : category === '本番形式' ? 'exam-' : 'sentence-';
+  const scheduled = loadReviews().filter(record => record.id.startsWith(prefix)).map(record => record.id);
+  const fallback = prefix === 'word-' ? eiken4Words.map(item => `word-${item.id}`)
+    : prefix === 'listening-' ? eiken4ListeningQuestions.map(item => `listening-${item.id}`)
+      : prefix === 'exam-' ? eiken4CoreExamQuestions.map(item => `exam-${item.id}`)
+        : eiken4CoreSentences.map(item => `sentence-${item.id}`);
+  return seededItems(Array.from(new Set([...scheduled, ...fallback])), `${localDateKey()}-${category}`, count)
+    .map(id => getQuestionById(id)).filter((item): item is DailyQuestion => Boolean(item));
+};
+
 export const recordReviewAnswer = (id: string, correct: boolean, isRetry: boolean) => {
   const records = loadReviews();
   const index = records.findIndex(record => record.id === id);

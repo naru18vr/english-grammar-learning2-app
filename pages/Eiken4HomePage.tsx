@@ -12,6 +12,7 @@ import { getDueReviewCount, loadDailyProgress } from '../services/eiken4DailySer
 import { loadReadingProgress } from '../services/eiken4ReadingService';
 import { loadGrade1Review } from '../services/grade1ReviewService';
 import { isWordQuizDoneToday } from '../services/eiken4WordMasteryService';
+import { eiken4Words } from '../data/eiken4Words';
 
 const Eiken4HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -58,15 +59,19 @@ const Eiken4HomePage: React.FC = () => {
         </div></section>
 
         <section className="mt-9"><p className="text-xs font-bold tracking-wider text-rose-500">EXTRA</p><h2 className="text-xl font-bold text-slate-800 mt-1">余裕がある日に追加</h2><p className="text-sm text-slate-500 mt-1">毎日の必須メニューではありません</p><div className="mt-4 space-y-3">
+          <button onClick={() => navigate('/eiken4/weakness')} className="w-full rounded-xl bg-orange-50 border border-orange-200 p-4 text-left flex items-center justify-between"><div><p className="text-xs font-bold text-orange-600">間違えた分野を優先・各10問</p><h3 className="font-bold text-slate-800">弱点特訓</h3></div><ChevronRightIcon className="h-6 w-6 text-orange-400"/></button>
+          <button onClick={() => navigate('/eiken4/listening-practice')} className="w-full rounded-xl bg-indigo-50 border border-indigo-200 p-4 text-left flex items-center justify-between"><div><p className="text-xs font-bold text-indigo-600">本番と同じ3部構成・各12問</p><h3 className="font-bold text-slate-800">リスニング特訓</h3></div><ChevronRightIcon className="h-6 w-6 text-indigo-400"/></button>
           <button onClick={() => navigate('/eiken4/grammar-guide')} className="w-full rounded-xl bg-cyan-50 border border-cyan-200 p-4 text-left flex items-center justify-between"><div className="flex items-center"><BookOpenIcon className="h-7 w-7 text-cyan-600 mr-3"/><div><p className="text-xs font-bold text-cyan-700">習う前でもわかる・解説＋ミニ問題</p><h3 className="font-bold text-slate-800">はじめての英検4級文法</h3></div></div><ChevronRightIcon className="h-6 w-6 text-cyan-500"/></button>
           <button onClick={() => navigate('/eiken4/exam-practice')} className="w-full rounded-xl bg-rose-50 border border-rose-200 p-4 text-left flex items-center justify-between"><div><p className="text-xs font-bold text-rose-600">本番に慣れる・10問</p><h3 className="font-bold text-slate-800">英検4級 本番形式</h3></div><ChevronRightIcon className="h-6 w-6 text-rose-400"/></button>
           <button onClick={() => startFresh('/eiken4/sentences')} className="w-full rounded-xl bg-amber-50 border border-amber-200 p-4 text-left flex items-center justify-between"><div className="flex items-center"><SparklesIcon className="h-7 w-7 text-amber-500 mr-3"/><div><p className="text-xs font-bold text-amber-600">語順を確認・5問</p><h3 className="font-bold text-slate-800">並べ替え問題</h3></div></div><ChevronRightIcon className="h-6 w-6 text-amber-400"/></button>
         </div></section>
 
         <section className="mt-9"><p className="text-xs font-bold tracking-wider text-teal-500">CHECK</p><h2 className="text-xl font-bold text-slate-800 mt-1">週1回・記録を見る</h2><div className="mt-4 grid grid-cols-2 gap-3">
+          <button onClick={() => navigate('/eiken4/full-mock')} className="rounded-xl bg-rose-600 text-white p-4 text-left shadow"><ClockIcon className="h-7 w-7"/><h3 className="font-bold mt-2">65問フル模試</h3><p className="text-xs opacity-90">試験前・月2回</p></button>
+          <button onClick={() => navigate('/eiken4/past-papers')} className="rounded-xl bg-cyan-700 text-white p-4 text-left shadow"><BookOpenIcon className="h-7 w-7"/><h3 className="font-bold mt-2">公式過去問記録</h3><p className="text-xs opacity-90">読解・聞くを記録</p></button>
           <button onClick={() => navigate('/eiken4/mock')} className="rounded-xl bg-violet-700 text-white p-4 text-left shadow"><ClockIcon className="h-7 w-7"/><h3 className="font-bold mt-2">10分ミニ模試</h3><p className="text-xs opacity-90">週1回</p></button>
           <button onClick={() => navigate('/eiken4/progress')} className="rounded-xl bg-teal-600 text-white p-4 text-left shadow"><ClockIcon className="h-7 w-7"/><h3 className="font-bold mt-2">ダッシュボード</h3><p className="text-xs opacity-90">試験まで・苦手</p></button>
-          <button onClick={() => navigate('/eiken4/word-map')} className="rounded-xl bg-indigo-50 border border-indigo-200 p-4 text-left"><BookOpenIcon className="h-7 w-7 text-indigo-600"/><h3 className="font-bold text-indigo-900 mt-2">英単語マップ</h3><p className="text-xs text-indigo-700">全128語</p></button>
+          <button onClick={() => navigate('/eiken4/word-map')} className="rounded-xl bg-indigo-50 border border-indigo-200 p-4 text-left"><BookOpenIcon className="h-7 w-7 text-indigo-600"/><h3 className="font-bold text-indigo-900 mt-2">英単語マップ</h3><p className="text-xs text-indigo-700">全{eiken4Words.length}語</p></button>
           <Link to="/eiken4/result" className="rounded-xl bg-white border border-slate-200 p-4 text-left"><ClockIcon className="h-7 w-7 text-teal-600"/><h3 className="font-bold text-slate-800 mt-2">今日の結果</h3><p className="text-xs text-slate-500">報告用画面</p></Link>
         </div></section>
 
