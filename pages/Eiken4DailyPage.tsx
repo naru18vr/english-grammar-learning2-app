@@ -12,6 +12,7 @@ import { copyTextToClipboard, createWorksheetShareLink, downloadDailyWorksheet }
 import { loadReadingProgress } from '../services/eiken4ReadingService';
 import { recordWordMastery } from '../services/eiken4WordMasteryService';
 import Eiken4GrammarReference from '../components/Eiken4GrammarReference';
+import { createTransfer } from '../services/learningTransferService';
 
 const Eiken4DailyPage: React.FC = () => {
   const navigate = useNavigate();
@@ -110,7 +111,8 @@ const Eiken4DailyPage: React.FC = () => {
       try {
         const score = progress.answers.filter(answer => answer.correct).length;
         const reading = loadReadingProgress();
-        const message = `今日の15分を完了しました！\n正解：${score} / ${progress.questionIds.length}問${reading.completedAt ? '\nミニ長文も完了しました！' : ''}\n今日の類題プリントはこちら\n${createWorksheetShareLink(progress, reading)}`;
+        const transfer = createTransfer();
+        const message = `今日の15分を完了しました！\n正解：${score} / ${progress.questionIds.length}問${reading.completedAt ? '\nミニ長文も完了しました！' : ''}\n今日の類題プリントはこちら\n${createWorksheetShareLink(progress, reading)}\n\nスマホ・タブレットの続きはこちら\n引き継ぎ番号：${transfer.code}\n${transfer.link}\n※別の端末では、一番新しい報告のリンクを押してください。`;
         setParentMessage(message);
         setCopyStatus(await copyTextToClipboard(message) ? 'copied' : 'error');
       } catch {
@@ -131,7 +133,7 @@ const Eiken4DailyPage: React.FC = () => {
             <Button onClick={copyParentMessage} className="mt-3 w-full">
               {copyStatus === 'copying' ? 'コピー中…' : copyStatus === 'copied' ? 'コピーしました！' : '結果と印刷リンクをコピー'}
             </Button>
-            <p className="text-xs text-amber-800 mt-2">Google Chatに貼り付けて、結果画面のスクショと一緒に送れます。</p>
+            <p className="text-xs text-amber-800 mt-2">Google Chatに貼り付けると最新の引き継ぎリンクも送られます。別端末では一番新しい報告のリンクを押してください。</p>
             {copyStatus === 'copied' && <p className="text-sm text-emerald-700 font-bold mt-2">コピーしました！ Google Chatに貼り付けてください。</p>}
             {copyStatus === 'error' && <p className="text-sm text-rose-700 font-bold mt-2">自動コピーできませんでした。下の文章を長押ししてコピーしてください。</p>}
             {copyStatus === 'error' && <textarea readOnly value={parentMessage} onFocus={event => event.currentTarget.select()} className="mt-2 w-full h-36 rounded-lg border border-amber-300 bg-white p-2 text-xs text-slate-700" aria-label="Google Chatへ送る文章" />}

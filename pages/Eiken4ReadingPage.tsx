@@ -10,6 +10,7 @@ import { loadDailyProgress } from '../services/eiken4DailyService';
 import { copyTextToClipboard, createWorksheetShareLink } from '../services/eiken4WorksheetService';
 import { playCorrectSound, playIncorrectSound } from '../services/soundService';
 import { speakText } from '../services/speechService';
+import { createTransfer } from '../services/learningTransferService';
 
 const Eiken4ReadingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -54,7 +55,8 @@ const Eiken4ReadingPage: React.FC = () => {
       const daily = loadDailyProgress();
       const dailyScore = daily.answers.filter(item => item.correct).length;
       const readingScore = reading.questions.filter((item, i) => progress.answers[i] === item.answer).length;
-      const message = `今日の15分とミニ長文を完了しました！\n15分：${dailyScore} / ${daily.questionIds.length}問\nミニ長文：${readingScore} / ${reading.questions.length}問\n今日の類題プリントはこちら\n${createWorksheetShareLink(daily, progress)}`;
+      const transfer = createTransfer();
+      const message = `今日の15分とミニ長文を完了しました！\n15分：${dailyScore} / ${daily.questionIds.length}問\nミニ長文：${readingScore} / ${reading.questions.length}問\n今日の類題プリントはこちら\n${createWorksheetShareLink(daily, progress)}\n\nスマホ・タブレットの続きはこちら\n引き継ぎ番号：${transfer.code}\n${transfer.link}\n※別の端末では、一番新しい報告のリンクを押してください。`;
       setParentMessage(message);
       setCopyStatus(await copyTextToClipboard(message) ? 'copied' : 'error');
     } catch {
