@@ -5,7 +5,7 @@ import { eiken4CoreExamQuestions, eiken4CoreSentences } from '../data/eiken4Curr
 import { DailyQuestion, getQuestionById, localDateKey } from './eiken4DailyService';
 
 export type PrepQuestion = DailyQuestion & { section: string; passage?: string; evidence?: string };
-export type FullMockResult = { id: string; date: string; reading: number; listening: number; readingTotal: 35; listeningTotal: 30; timeUsed: number };
+export type FullMockResult = { id: string; date: string; reading: number; listening: number; readingTotal: 35; listeningTotal: 30; timeUsed: number; answers?: Record<string,string> };
 export type PastPaperResult = { id: string; date: string; label: string; reading: number; listening: number; note: string };
 
 const FULL_RESULTS_KEY = 'eiken4FullMockResultsV1';

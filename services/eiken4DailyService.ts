@@ -177,6 +177,7 @@ export const getWeakQuestions = (category: string, count = 10): DailyQuestion[] 
 };
 
 export const recordReviewAnswer = (id: string, correct: boolean, isRetry: boolean) => {
+  if (!/^(word|listening|exam|sentence)-/.test(id)) return;
   const records = loadReviews();
   const index = records.findIndex(record => record.id === id);
   const current = index >= 0 ? records[index] : undefined;
