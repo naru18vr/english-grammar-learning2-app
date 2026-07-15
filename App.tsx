@@ -33,6 +33,7 @@ const Eiken4ListeningPracticePage = lazy(() => import('./pages/Eiken4ListeningPr
 const Eiken4PastPaperRecordPage = lazy(() => import('./pages/Eiken4PastPaperRecordPage'));
 const Eiken4WeaknessPage = lazy(() => import('./pages/Eiken4WeaknessPage'));
 const Eiken4WordChallengePage = lazy(() => import('./pages/Eiken4WordChallengePage'));
+const LearningTransferPage = lazy(() => import('./pages/LearningTransferPage'));
 const GradeDataBoundary = lazy(() => import('./components/GradeDataBoundary'));
 
 const PageLoading = () => (
@@ -83,6 +84,7 @@ const App: React.FC = () => {
             <Route path="/eiken4/past-papers" element={<Eiken4PastPaperRecordPage />} />
             <Route path="/eiken4/weakness" element={<Eiken4WeaknessPage />} />
             <Route path="/eiken4/word-challenge" element={<Eiken4WordChallengePage />} />
+            <Route path="/transfer" element={<LearningTransferPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           </Suspense>

@@ -10,6 +10,7 @@ import { calculateStreak, daysUntilExam, getExamDate, lastSevenDays, loadActivit
 import { loadFullMockResults, loadPastPaperResults } from '../services/eiken4ExamPrepService';
 import { loadWordMastery, masteryLevel } from '../services/eiken4WordMasteryService';
 import { eiken4Words } from '../data/eiken4Words';
+import { createTransfer } from '../services/learningTransferService';
 
 const Eiken4ProgressPage: React.FC = () => {
   const navigate = useNavigate(); const [examDate, setExamDate] = useState(getExamDate);
@@ -32,7 +33,8 @@ const Eiken4ProgressPage: React.FC = () => {
   const mastery = loadWordMastery(); const masteredWords = eiken4Words.filter(word => masteryLevel(mastery[word.id]) === 'mastered').length; const wordRate = Math.round(masteredWords/eiken4Words.length*100);
   const abilityScore = Math.round((wordRate*.25)+(readingAverage/35*100*.4)+(listeningAverage/30*100*.35)); const abilityLabel = lastThree.length < 2 ? '判定には模試があと2回必要' : abilityScore >= 80 ? '安全圏' : abilityScore >= 70 ? '合格圏' : 'まだ練習';
   const daysForStudy = Math.max(1, remaining); const wordsPerDay = Math.max(3, Math.ceil((eiken4Words.length-masteredWords)/daysForStudy)); const priority = readingAverage && listeningAverage ? (readingAverage/35 < listeningAverage/30 ? 'リーディング' : 'リスニング') : weak[0]?.[0] || '毎日のコース';
-  const weeklyMessage = `英検4級 週間報告\n学習：${dailyDays}/7日　長文：${readingDays}/7日\n単語：${masteredWords}/${eiken4Words.length}語\n模試平均：読解 ${readingAverage}/35・聞く ${listeningAverage}/30\n判定：${abilityLabel}\n今週の優先：${priority}`;
+  const transfer = createTransfer();
+  const weeklyMessage = `英検4級 週間報告\n学習：${dailyDays}/7日　長文：${readingDays}/7日\n単語：${masteredWords}/${eiken4Words.length}語\n模試平均：読解 ${readingAverage}/35・聞く ${listeningAverage}/30\n判定：${abilityLabel}\n今週の優先：${priority}\n引き継ぎ番号：${transfer.code}\nスマホ・タブレット引き継ぎリンク\n${transfer.link}`;
   const copyReport = async () => { try { await navigator.clipboard.writeText(weeklyMessage); alert('週間報告をコピーしました！'); } catch { window.prompt('下の文章をコピーしてください', weeklyMessage); } };
   return <div className="flex-grow container mx-auto p-4 sm:p-6 max-w-2xl"><Button onClick={() => navigate('/eiken4')} variant="ghost" size="sm"><ArrowLeftIcon className="h-5 w-5 mr-2"/>英検4級に戻る</Button>
     <header className="mt-4 rounded-2xl bg-teal-600 text-white p-6 shadow-lg"><div className="flex items-center"><ChartBarIcon className="h-9 w-9 mr-3"/><div><p className="text-sm font-bold opacity-90">英検4級</p><h1 className="text-3xl font-bold">学習ダッシュボード</h1></div></div><div className="mt-5 rounded-xl bg-white/15 p-4 text-center"><p className="text-sm">試験まで</p><p className="text-5xl font-bold mt-1">{remaining >= 0 ? `${remaining}日` : '終了'}</p><label className="block text-xs mt-3">試験日 <input type="date" value={examDate} onChange={e => updateDate(e.target.value)} className="ml-2 rounded text-slate-800 px-2 py-1"/></label></div></header>
