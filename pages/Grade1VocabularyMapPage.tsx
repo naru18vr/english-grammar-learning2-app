@@ -5,21 +5,46 @@ import ArrowLeftIcon from '../components/shared/ArrowLeftIcon';
 import { gradeVocabularyData } from '../data/gradeVocabularyData';
 import { gradeVocabularyMasteryLevel, gradeWordId, loadGradeVocabularyMastery, VocabularyMasteryLevel } from '../services/gradeVocabularyService';
 
-const styles: Record<VocabularyMasteryLevel, string> = { mastered: 'bg-emerald-50 border-emerald-300', consolidating: 'bg-sky-50 border-sky-300', learning: 'bg-amber-50 border-amber-300', new: 'bg-slate-50 border-slate-200' };
+const wordStyles: Record<VocabularyMasteryLevel, string> = {
+  mastered: 'bg-emerald-50 border-emerald-200 ring-emerald-100',
+  consolidating: 'bg-sky-50 border-sky-200 ring-sky-100',
+  learning: 'bg-amber-50 border-amber-200 ring-amber-100',
+  new: 'bg-white border-slate-200 ring-slate-100',
+};
+const gradeHeaders = { 1: 'from-emerald-700 to-teal-500', 2: 'from-sky-700 to-cyan-500', 3: 'from-indigo-700 to-violet-500' } as const;
+
 const Grade1VocabularyMapPage: React.FC = () => {
   const navigate = useNavigate();
   const { gradeId = '' } = useParams();
   const config = gradeVocabularyData[gradeId];
   if (!config) return <Navigate to="/vocabulary" replace />;
   const mastery = loadGradeVocabularyMastery(config.grade);
-  const counts = config.words.reduce((result, _, index) => { result[gradeVocabularyMasteryLevel(mastery[gradeWordId(config.grade, index)])] += 1; return result; }, { mastered: 0, consolidating: 0, learning: 0, new: 0 });
+  const counts = config.words.reduce((result, _, index) => {
+    result[gradeVocabularyMasteryLevel(mastery[gradeWordId(config.grade, index)])] += 1;
+    return result;
+  }, { mastered: 0, consolidating: 0, learning: 0, new: 0 });
+  const progress = Math.round((counts.mastered / config.words.length) * 100);
+
   return (
-    <div className="flex-grow p-4 sm:p-6 max-w-3xl mx-auto w-full">
-      <Button onClick={() => navigate('/vocabulary')} variant="ghost" size="sm"><ArrowLeftIcon className="h-5 w-5 mr-2" />英単語に戻る</Button>
-      <header className="mt-4 rounded-2xl bg-emerald-600 p-6 text-white shadow-lg"><p className="text-sm font-bold text-emerald-100">中学{config.grade}年生・全{config.words.length}語</p><h1 className="mt-1 text-3xl font-bold">英単語マップ</h1><p className="mt-2 text-sm text-emerald-50">異なる4日で正解し、直近も正解した単語だけ「覚えた」になります。</p></header>
-      <section className="mt-4 grid grid-cols-2 gap-2 text-center sm:grid-cols-4"><div className="rounded-xl bg-emerald-100 p-3"><p className="text-xs">覚えた</p><p className="text-2xl font-bold text-emerald-800">{counts.mastered}</p></div><div className="rounded-xl bg-sky-100 p-3"><p className="text-xs">定着中</p><p className="text-2xl font-bold text-sky-800">{counts.consolidating}</p></div><div className="rounded-xl bg-amber-100 p-3"><p className="text-xs">練習中</p><p className="text-2xl font-bold text-amber-800">{counts.learning}</p></div><div className="rounded-xl bg-slate-200 p-3"><p className="text-xs">未学習</p><p className="text-2xl font-bold text-slate-700">{counts.new}</p></div></section>
-      <div className="mt-5 space-y-5">{config.groups.map(group => <section key={group.title} className="rounded-xl border border-slate-100 bg-white p-4 shadow"><h2 className="font-bold text-slate-800">{group.title}</h2><div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">{config.words.slice(group.from, group.to).map((word, offset) => { const index = group.from + offset; const level = gradeVocabularyMasteryLevel(mastery[gradeWordId(config.grade, index)]); return <div key={word.word} className={`rounded-lg border p-2 ${styles[level]}`}><div className="flex items-center gap-1"><p className="font-bold text-slate-800">{word.word}</p>{word.review && <span className="rounded-full bg-violet-100 px-1.5 py-0.5 text-[10px] font-bold text-violet-700">復習</span>}</div><p className="mt-1 text-xs text-slate-600">{word.meaning}</p></div>; })}</div></section>)}</div>
-      <Button onClick={() => navigate(`/vocabulary/${gradeId}/quiz`)} className="mt-6 w-full">確認テストをする</Button>
+    <div className="min-h-full flex-grow bg-slate-50 px-4 pb-28 pt-4 sm:px-6">
+      <div className="mx-auto w-full max-w-3xl">
+        <Button onClick={() => navigate('/vocabulary')} variant="ghost" size="sm" className="-ml-2"><ArrowLeftIcon className="mr-2 h-5 w-5" />英単語に戻る</Button>
+        <header className={`relative mt-3 overflow-hidden rounded-[2rem] bg-gradient-to-br ${gradeHeaders[config.grade as keyof typeof gradeHeaders]} p-6 text-white shadow-lg sm:p-8`}>
+          <div className="absolute -right-8 -top-12 h-40 w-40 rounded-full bg-white/10" />
+          <div className="relative"><p className="text-sm font-bold text-white/75">中学{config.grade}年生・全{config.words.length}語</p><div className="mt-1 flex items-end justify-between"><h1 className="text-3xl font-extrabold">英単語マップ</h1><p className="text-2xl font-extrabold">{progress}<span className="text-sm">%</span></p></div><div className="mt-4 h-2.5 overflow-hidden rounded-full bg-black/15"><div className="h-full rounded-full bg-white transition-all" style={{ width: `${progress}%` }} /></div><p className="mt-3 text-xs leading-5 text-white/80">4日間正解して「覚えた」を増やそう</p></div>
+        </header>
+
+        <section className="mt-4 grid grid-cols-2 gap-2.5 text-center sm:grid-cols-4">
+          {[['覚えた', counts.mastered, 'bg-emerald-100 text-emerald-800'], ['定着中', counts.consolidating, 'bg-sky-100 text-sky-800'], ['練習中', counts.learning, 'bg-amber-100 text-amber-800'], ['未学習', counts.new, 'bg-slate-200 text-slate-700']].map(([label, value, style]) => <div key={String(label)} className={`rounded-2xl p-3 ${style}`}><p className="text-xs font-bold opacity-75">{label}</p><p className="mt-1 text-2xl font-extrabold">{value}</p></div>)}
+        </section>
+
+        <div className="mt-6 space-y-4">{config.groups.map((group, groupIndex) => {
+          const groupWords = config.words.slice(group.from, group.to);
+          const groupMastered = groupWords.reduce((sum, _, offset) => sum + (gradeVocabularyMasteryLevel(mastery[gradeWordId(config.grade, group.from + offset)]) === 'mastered' ? 1 : 0), 0);
+          return <section key={group.title} className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5"><div className="flex items-center justify-between"><div className="flex items-center gap-2.5"><span className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-sm font-extrabold text-slate-500">{groupIndex + 1}</span><h2 className="font-extrabold text-slate-800">{group.title}</h2></div><p className="text-xs font-bold text-slate-400">{groupMastered}/{groupWords.length}</p></div><div className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-3">{groupWords.map((word, offset) => { const index = group.from + offset; const level = gradeVocabularyMasteryLevel(mastery[gradeWordId(config.grade, index)]); return <div key={word.word} className={`min-h-20 rounded-2xl border p-3 ring-1 ${wordStyles[level]}`}><div className="flex flex-wrap items-center gap-1"><p className="font-extrabold text-slate-800">{word.word}</p>{word.review && <span className="rounded-full bg-violet-100 px-1.5 py-0.5 text-[10px] font-bold text-violet-700">復習</span>}</div><p className="mt-1.5 text-xs leading-4 text-slate-600">{word.meaning}</p></div>; })}</div></section>;
+        })}</div>
+      </div>
+      <div className="fixed inset-x-0 bottom-0 z-10 border-t border-slate-200 bg-white/95 p-3 backdrop-blur"><div className="mx-auto max-w-3xl"><Button onClick={() => navigate(`/vocabulary/${gradeId}/quiz`)} size="lg" className="w-full rounded-2xl bg-emerald-600 shadow-lg shadow-emerald-200 hover:bg-emerald-700">確認テストをはじめる</Button></div></div>
     </div>
   );
 };
