@@ -55,8 +55,8 @@ const App: React.FC = () => {
               <Route path="/progress" element={<ProgressPage />} />
             </Route>
             <Route path="/vocabulary" element={<VocabularyHomePage />} />
-            <Route path="/vocabulary/grade1/quiz" element={<Grade1VocabularyQuizPage />} />
-            <Route path="/vocabulary/grade1/map" element={<Grade1VocabularyMapPage />} />
+            <Route path="/vocabulary/:gradeId/quiz" element={<Grade1VocabularyQuizPage />} />
+            <Route path="/vocabulary/:gradeId/map" element={<Grade1VocabularyMapPage />} />
             <Route path="/eiken4" element={<Eiken4HomePage />} />
             <Route path="/eiken4/daily" element={<Eiken4DailyPage />} />
             <Route path="/eiken4/reading" element={<Eiken4ReadingPage />} />

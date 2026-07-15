@@ -3,6 +3,7 @@ import { GRADE_2_UNITS } from '../data/grade2';
 import { GRADE_3_UNITS } from '../data/grade3';
 import { eiken4CoreExamQuestions, eiken4CoreSentences } from '../data/eiken4Curriculum';
 import { eiken4Words } from '../data/eiken4Words';
+import { gradeVocabularyData } from '../data/gradeVocabularyData';
 
 const errors: string[] = [];
 const grades = [GRADE_1_UNITS, GRADE_2_UNITS, GRADE_3_UNITS];
@@ -70,9 +71,20 @@ if (eiken4Words.length < 120) errors.push(`英検4級単語: ${eiken4Words.lengt
 if (new Set(eiken4Words.map(item => item.id)).size !== eiken4Words.length) errors.push('英検4級単語: ID重複');
 if (new Set(eiken4Words.map(item => item.word.toLowerCase())).size !== eiken4Words.length) errors.push('英検4級単語: 見出し語重複');
 
+for (const [gradeId, config] of Object.entries(gradeVocabularyData)) {
+  const expected = config.grade === 1 ? 72 : 96;
+  if (config.words.length !== expected) errors.push(`${gradeId}英単語: ${config.words.length}語（${expected}語必要）`);
+  if (new Set(config.words.map(item => item.word.toLowerCase())).size !== config.words.length) errors.push(`${gradeId}英単語: 見出し語重複`);
+  if (config.words.some(item => !item.word || !item.meaning || !item.example)) errors.push(`${gradeId}英単語: 必須項目不足`);
+  const covered = config.groups.flatMap(group => Array.from({ length: group.to - group.from }, (_, index) => group.from + index));
+  if (covered.length !== config.words.length || new Set(covered).size !== config.words.length || Math.max(...covered) !== config.words.length - 1) {
+    errors.push(`${gradeId}英単語: マップ分類の漏れ・重複`);
+  }
+}
+
 if (errors.length) {
   console.error(errors.slice(0, 50).join('\n'));
   process.exit(1);
 }
 
-console.log(`実行時教材チェックOK: ${grades.flat().length} Units / ${grades.flat().reduce((sum, unit) => sum + unit.sentences.length, 0)}問 / 英検4級 ${eiken4CoreSentences.length}並べ替え・${eiken4Words.length}語`);
+console.log(`実行時教材チェックOK: ${grades.flat().length} Units / ${grades.flat().reduce((sum, unit) => sum + unit.sentences.length, 0)}問 / 英検4級 ${eiken4CoreSentences.length}並べ替え・${eiken4Words.length}語 / 学年単語 ${Object.values(gradeVocabularyData).reduce((sum, config) => sum + config.words.length, 0)}語`);
